@@ -7,8 +7,7 @@ use RodrigoPedra\RecordProcessor\Contracts\Configurable;
 
 class Configurator
 {
-    /** @var Configurable */
-    protected $configurable;
+    protected Configurable $configurable;
 
     public function __construct(Configurable $configurable)
     {
@@ -17,7 +16,7 @@ class Configurator
 
     public function __call($method, $parameters)
     {
-        if (in_array($method, $this->configurable->getConfigurableMethods())) {
+        if (in_array($method, $this->configurable->getConfigurableMethods(), true)) {
             $this->configurable->{$method}(...$parameters);
 
             return $this;

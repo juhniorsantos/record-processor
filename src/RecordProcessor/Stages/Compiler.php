@@ -18,14 +18,11 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
 {
     use CountsRecords, HasHeader, WritesHeader, HasTrailler, WritesTrailler;
 
-    /** @var Writer */
-    protected $writer;
+    protected Writer $writer;
 
-    /** @var RecordFormatter */
-    protected $recordFormatter;
+    protected RecordFormatter $recordFormatter;
 
-    /** @var bool */
-    protected $isOpen;
+    protected bool $isOpen = false;
 
     public function __construct(Writer $writer, RecordFormatter $recordFormatter)
     {
@@ -37,7 +34,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
      * @param  Record  $record
      * @return  Record|null
      */
-    public function handle(Record $record)
+    public function handle(Record $record): ?Record
     {
         $this->open($record);
 
@@ -48,11 +45,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         return $record;
     }
 
-    /**
-     * @param  FlushPayload  $payload
-     * @return FlushPayload
-     */
-    public function flush(FlushPayload $payload)
+    public function flush(FlushPayload $payload): FlushPayload
     {
         if ($payload->hasRecord()) {
             $record = $this->handle($payload->getRecord());
@@ -75,11 +68,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         return $payload;
     }
 
-    /**
-     * @param  Record|null  $record
-     * @return void
-     */
-    protected function open(Record $record = null)
+    protected function open(Record $record = null): void
     {
         if ($this->isOpen) {
             return;
@@ -92,7 +81,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         $this->writeHeader($record);
     }
 
-    protected function close()
+    protected function close(): void
     {
         if (! $this->isOpen) {
             return;

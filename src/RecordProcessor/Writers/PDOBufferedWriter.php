@@ -20,11 +20,11 @@ class PDOBufferedWriter extends PDOWriter
     }
 
     /**
-     * @param  array  $content
+     * @param  mixed  $content
      * @return void
      * @throws Exception
      */
-    public function append($content)
+    public function append(mixed $content)
     {
         if (! is_array($content)) {
             throw new RuntimeException('content for PDOBufferedWriter should be an array');

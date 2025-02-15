@@ -24,7 +24,7 @@ use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFo
 
 class ExamplesCommand extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('examples');
 
@@ -38,17 +38,17 @@ class ExamplesCommand extends Command
         $this->addOption('invalid', 'i', InputOption::VALUE_NONE, 'log invalid records');
     }
 
-    protected function getAvailableReaders()
+    protected function getAvailableReaders(): string
     {
         return 'array|collection|csv|excel|iterator|pdo|text';
     }
 
-    protected function getAvailableWriters()
+    protected function getAvailableWriters(): string
     {
         return 'array|collection|csv|echo|excel|html|json|log|pdo|pdo-buffered|text';
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Script start
         $time_start = microtime(true);
@@ -108,6 +108,8 @@ class ExamplesCommand extends Command
 
             $logger->info('Total Execution Time: ' . $execution_time . ' seconds');
         }
+
+        return Command::SUCCESS;
     }
 
     protected function makeBuilder()

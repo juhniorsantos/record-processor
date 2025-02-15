@@ -61,11 +61,11 @@ class ExcelFileWriter extends FileWriter implements ConfigurableWriter
     }
 
     /**
-     * @param  array  $content
+     * @param  mixed  $content
      * @return void
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
-    public function append($content)
+    public function append(mixed $content)
     {
         if ($this->getLineCount() === static::ROW_LIMIT) {
             throw new RuntimeException(sprintf('Excel worksheet cannot contain more than %d rows',

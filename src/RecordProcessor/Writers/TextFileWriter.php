@@ -25,7 +25,7 @@ class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines
         $this->newLine = $newLine;
     }
 
-    public function append($content)
+    public function append(mixed $content)
     {
         if (! is_string($content)) {
             throw new RuntimeException('content for TextWriter should be a string');

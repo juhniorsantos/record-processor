@@ -22,10 +22,10 @@ class EchoWriter extends FileWriter implements ConfigurableWriter
     }
 
     /**
-     * @param  string  $content
+     * @param  mixed  $content
      * @return void
      */
-    public function append($content)
+    public function append(mixed $content)
     {
         $prefix = $this->getPrefix();
 

@@ -27,7 +27,7 @@ class JSONFileWriter extends FileWriter implements ConfigurableWriter, NewLines
         $this->file->fwrite(']');
     }
 
-    public function append($content)
+    public function append(mixed $content)
     {
         if (is_object($content) && method_exists($content, 'toJson')) {
             $content = $content->toJson();

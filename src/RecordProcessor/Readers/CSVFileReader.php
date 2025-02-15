@@ -2,6 +2,8 @@
 
 namespace RodrigoPedra\RecordProcessor\Readers;
 
+use League\Csv\Exception;
+use League\Csv\InvalidArgument;
 use League\Csv\Reader as RawCsvReader;
 use RodrigoPedra\RecordProcessor\Traits\CsvControls;
 use RodrigoPedra\RecordProcessor\Helpers\Configurator;
@@ -11,8 +13,7 @@ class CSVFileReader extends FileReader implements ConfigurableReader
 {
     use CsvControls;
 
-    /** @var bool */
-    protected $useFirstRowAsHeader = true;
+    protected bool $useFirstRowAsHeader = true;
 
     public function __construct($file)
     {
@@ -25,15 +26,16 @@ class CSVFileReader extends FileReader implements ConfigurableReader
         $this->useFirstRowAsHeader(true);
     }
 
-    /**
-     * @param  bool  $firstRowAsHeader
-     */
-    public function useFirstRowAsHeader($firstRowAsHeader = true)
+    public function useFirstRowAsHeader($firstRowAsHeader = true): void
     {
         $this->useFirstRowAsHeader = $firstRowAsHeader;
     }
 
-    public function open()
+    /**
+     * @throws InvalidArgument
+     * @throws Exception
+     */
+    public function open(): void
     {
         parent::open();
 
@@ -54,7 +56,7 @@ class CSVFileReader extends FileReader implements ConfigurableReader
     /**
      * @return array
      */
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return [
             'setDelimiter',
@@ -67,7 +69,7 @@ class CSVFileReader extends FileReader implements ConfigurableReader
     /**
      * @return Configurator
      */
-    public function createConfigurator()
+    public function createConfigurator(): Configurator
     {
         return new Configurator($this);
     }

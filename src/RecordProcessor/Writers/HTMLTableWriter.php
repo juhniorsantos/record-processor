@@ -84,7 +84,7 @@ class HTMLTableWriter implements ConfigurableWriter
         $this->records = [];
     }
 
-    public function append($content)
+    public function append(mixed $content)
     {
         array_push($this->records, Arr::wrap($content));
 

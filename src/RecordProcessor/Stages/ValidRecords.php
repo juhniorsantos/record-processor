@@ -7,7 +7,7 @@ use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 
 class ValidRecords implements ProcessorStageHandler
 {
-    public function handle(Record $record)
+    public function handle(Record $record): ?Record
     {
         return $record->valid() ? $record : null;
     }

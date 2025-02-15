@@ -6,8 +6,5 @@ use OuterIterator;
 
 interface Reader extends Resource, OuterIterator
 {
-    /**
-     * @return  int
-     */
-    public function getLineCount();
+    public function getLineCount(): int;
 }

@@ -14,7 +14,7 @@ class ExampleRecordFormatter implements RecordFormatter
      * @param  ExampleRecord|Record  $record
      * @return bool
      */
-    public function formatRecord(Writer $writer, Record $record)
+    public function formatRecord(Writer $writer, Record $record): bool
     {
         if (! $record->valid()) {
             return false;

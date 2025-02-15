@@ -4,8 +4,5 @@ namespace RodrigoPedra\RecordProcessor\Contracts;
 
 interface Configurable
 {
-    /**
-     * @return array
-     */
-    public function getConfigurableMethods();
+    public function getConfigurableMethods(): array;
 }

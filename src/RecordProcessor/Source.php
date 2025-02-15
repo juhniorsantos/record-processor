@@ -9,11 +9,8 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
 class Source extends IteratorIterator
 {
-    /** @var Reader */
-    protected $reader;
-
-    /** @var RecordParser */
-    protected $recordParser;
+    protected Reader $reader;
+    protected RecordParser $recordParser;
 
     public function __construct(Reader $reader, RecordParser $recordParser)
     {
@@ -23,7 +20,7 @@ class Source extends IteratorIterator
         $this->recordParser = $recordParser;
     }
 
-    public function current()
+    public function current(): mixed
     {
         $result = $this->recordParser->parseRecord($this->reader, parent::current());
 
@@ -34,26 +31,17 @@ class Source extends IteratorIterator
         return is_array($result) ? $result : [$result];
     }
 
-    /**
-     * @return  void
-     */
-    public function open()
+    public function open(): void
     {
         $this->reader->open();
     }
 
-    /**
-     * @return  void
-     */
-    public function close()
+    public function close(): void
     {
         $this->reader->close();
     }
 
-    /**
-     * @return  int
-     */
-    public function getLineCount()
+    public function getLineCount(): int
     {
         return $this->reader->getLineCount();
     }

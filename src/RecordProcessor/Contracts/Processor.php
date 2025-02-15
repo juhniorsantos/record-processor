@@ -6,8 +6,5 @@ use RodrigoPedra\RecordProcessor\Stages\TransferObjects\ProcessorOutput;
 
 interface Processor
 {
-    /**
-     * @return ProcessorOutput
-     */
-    public function process();
+    public function process(): ProcessorOutput;
 }

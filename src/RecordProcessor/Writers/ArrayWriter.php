@@ -19,9 +19,9 @@ class ArrayWriter implements Writer
         //
     }
 
-    public function append($row)
+    public function append(mixed $content)
     {
-        array_push($this->items, $row);
+        array_push($this->items, $content);
     }
 
     /**

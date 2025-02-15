@@ -10,25 +10,25 @@ use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class FileInfo extends SplFileInfo
 {
-    const INPUT_STREAM = 'php://input';
-    const OUTPUT_STREAM = 'php://output';
-    const TEMP_FILE = 'php://temp';
-    const TEMP_FILE_MEMORY_SIZE = 4194304; // 4MB
+    const string INPUT_STREAM = 'php://input';
+    const string OUTPUT_STREAM = 'php://output';
+    const string TEMP_FILE = 'php://temp';
+    const int TEMP_FILE_MEMORY_SIZE = 4194304; // 4MB
 
-    public function getExtension()
+    public function getExtension(): string
     {
         return strtolower(parent::getExtension());
     }
 
-    public function getFileInfo($className = null)
+    public function getFileInfo($class = null): SplFileInfo
     {
-        $className = value_or_null($className);
-        $className = $className ?: self::class;
+        $class = value_or_null($class);
+        $class = $class ?: self::class;
 
-        return parent::getFileInfo($className);
+        return parent::getFileInfo($class);
     }
 
-    public function isTempFile()
+    public function isTempFile(): bool
     {
         if ($this instanceof SplTempFileObject) {
             return true;
@@ -37,16 +37,11 @@ class FileInfo extends SplFileInfo
         return substr($this->getPathname(), 0, 10) === self::TEMP_FILE;
     }
 
-    public function guessMimeType()
+    public function guessMimeType(): false|string
     {
         $mimeMap = [
             'csv' => 'text/csv',
             'txt' => 'text/plain',
-            'htm' => 'text/html',
-            'html' => 'text/html',
-            'json' => 'application/json',
-            'xls' => 'application/vnd.ms-excel',
-            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ];
 
         $extension = $this->getExtension();
@@ -58,12 +53,12 @@ class FileInfo extends SplFileInfo
         return mime_content_type($this->getBasename());
     }
 
-    public function isCSV()
+    public function isCSV(): bool
     {
         return $this->getExtension() === 'csv';
     }
 
-    public function getBasenameWithoutExtension()
+    public function getBasenameWithoutExtension(): string
     {
         $extension = $this->getExtension();
         $extension = $extension ? '.' . $extension : $extension;
@@ -71,20 +66,12 @@ class FileInfo extends SplFileInfo
         return $this->getBasename($extension);
     }
 
-    public function getBasenameWithExtension($extension = null)
-    {
-        return implode('.', array_filter([
-            $this->getBasenameWithoutExtension(),
-            value_or_null($extension),
-        ]));
-    }
-
-    public static function createTempFileObject()
+    public static function createTempFileObject(): SplTempFileObject
     {
         return new SplTempFileObject(self::TEMP_FILE_MEMORY_SIZE);
     }
 
-    public static function createFileObject($file, $mode)
+    public static function createFileObject($file, $mode): SplTempFileObject|SplFileObject
     {
         if ($file === static::TEMP_FILE) {
             return static::createTempFileObject();
@@ -100,19 +87,16 @@ class FileInfo extends SplFileInfo
             throw new InvalidArgumentException('File should be a path to a file or a SplFileObject');
         }
 
-        /** @var FileInfo $fileInfo */
         $fileInfo = $file->getFileInfo(static::class);
 
         if ($fileInfo->isTempFile()) {
             return $file;
         }
 
-        $file = null;
-
         return $fileInfo->openFile($mode);
     }
 
-    public static function createWritableFileObject($file, $mode = 'wb')
+    public static function createWritableFileObject($file, $mode = 'wb'): SplTempFileObject|SplFileObject
     {
         $file = static::createFileObject($file, $mode);
 
@@ -138,11 +122,10 @@ class FileInfo extends SplFileInfo
         return $file;
     }
 
-    public static function createReadableFileObject($file, $mode = 'rb')
+    public static function createReadableFileObject($file, $mode = 'rb'): SplTempFileObject|SplFileObject
     {
         $file = static::createFileObject($file, $mode);
 
-        /** @var FileInfo $fileInfo */
         $fileInfo = $file->getFileInfo(static::class);
 
         if (! $fileInfo->isTempFile() && ! $fileInfo->isReadable()) {

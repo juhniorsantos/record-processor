@@ -21,12 +21,12 @@ class RecordKeyAggregate implements RecordAggregate
         $this->pushRecord($record);
     }
 
-    public function get($field, $default = null)
+    public function get(string $field, ?string $default = null)
     {
         return $this->master->get($field, $default);
     }
 
-    public function set($field, $value)
+    public function set(string $field, ?string $value)
     {
         $this->master->set($field, $value);
     }

@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
+use RodrigoPedra\RecordProcessor\Helpers\FileConfig;
 use SplFileObject;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
@@ -11,27 +12,25 @@ abstract class FileWriter implements Writer
 {
     use CountsLines;
 
-    /** @var SplFileObject|null */
-    protected $file = null;
+    protected SplFileObject|null|\SplTempFileObject $file = null;
 
-    /** @var FileInfo|null */
-    protected $fileInfo = null;
+    protected null|\SplFileInfo|FileInfo $fileInfo = null;
 
     public function __construct($file = null)
     {
-        $file = is_null($file) ? FileInfo::TEMP_FILE : $file;
+        $file = is_null($file) ? FileConfig::TEMP_FILE : $file;
 
         $this->file = FileInfo::createWritableFileObject($file, 'wb');
         $this->fileInfo = $this->file->getFileInfo(FileInfo::class);
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
         $this->file->ftruncate(0);
     }
 
-    public function close()
+    public function close(): void
     {
         //
     }
@@ -39,7 +38,7 @@ abstract class FileWriter implements Writer
     /**
      * @return mixed
      */
-    public function output()
+    public function output(): mixed
     {
         return FileInfo::createReadableFileObject($this->file, 'rb');
     }

@@ -57,7 +57,7 @@ class LogWriter implements ConfigurableWriter, LoggerAwareInterface
         //
     }
 
-    public function append($content)
+    public function append(mixed $content)
     {
         $this->logger->log($this->level, $this->getPrefix(), Arr::wrap($content));
 

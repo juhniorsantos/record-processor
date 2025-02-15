@@ -11,7 +11,7 @@ class StopOnNullPipelineProcessor implements ProcessorInterface
      * @param  mixed  $payload
      * @return mixed
      */
-    public function process(array $stages, $payload)
+    public function process($payload, callable ...$stages)
     {
         foreach ($stages as $stage) {
             if (is_null($payload)) {

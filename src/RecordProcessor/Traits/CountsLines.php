@@ -4,15 +4,14 @@ namespace RodrigoPedra\RecordProcessor\Traits;
 
 trait CountsLines
 {
-    /** @var int */
-    protected $lineCount = 0;
+    protected int $lineCount = 0;
 
-    public function getLineCount()
+    public function getLineCount(): int
     {
         return $this->lineCount;
     }
 
-    protected function incrementLineCount($amount = 1)
+    protected function incrementLineCount($amount = 1): void
     {
         $this->lineCount += $amount;
     }

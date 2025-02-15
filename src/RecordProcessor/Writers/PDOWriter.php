@@ -88,11 +88,11 @@ class PDOWriter implements ConfigurableWriter
     }
 
     /**
-     * @param  array  $content
+     * @param  mixed  $content
      * @return void
      * @throws Exception
      */
-    public function append($content)
+    public function append(mixed $content)
     {
         if (! is_array($content)) {
             throw new RuntimeException('content for PDOWriter should be an array');

@@ -8,29 +8,29 @@ use RodrigoPedra\RecordProcessor\Contracts\JsonRecord;
 use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
 use RodrigoPedra\RecordProcessor\Writers\JSONFileWriter;
 
-class SimpleRecord extends Fluent implements Record, TextRecord, JsonRecord
+class SimpleRecord extends Fluent implements Record, TextRecord
 {
-    public function get($field, $default = '')
+    public function get($key, $default = '')
     {
-        return parent::get($field, $default);
+        return parent::get($key, $default);
     }
 
-    public function set($field, $value)
+    public function set($key, $value): void
     {
-        $this->offsetSet($field, $value);
+        $this->offsetSet($key, $value);
     }
 
-    public function valid()
+    public function valid(): bool
     {
-        return strlen($this->getKey()) > 0;
+        return $this->getKey() != '';
     }
 
-    public function getKey()
+    public function getKey(): ?string
     {
         return reset($this->attributes) ?: '';
     }
 
-    public function toText()
+    public function toText(): string
     {
         return $this->toJson(JSONFileWriter::JSON_ENCODE_OPTIONS);
     }

@@ -29,7 +29,7 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
         $this->setOutputBOM(static::BOM_UTF8);
     }
 
-    public function open()
+    public function open(): void
     {
         parent::open();
 
@@ -42,23 +42,19 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
         $this->writer->setEscape($this->getEscape());
     }
 
-    public function close()
+    public function close(): void
     {
         $this->writer = null;
     }
 
-    /**
-     * @param  array  $content
-     * @return void
-     */
-    public function append($content)
+    public function append(mixed $content): void
     {
         $this->writer->insertOne(Arr::wrap($content));
 
         $this->incrementLineCount();
     }
 
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return [
             'setOutputBOM',
@@ -69,7 +65,7 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
         ];
     }
 
-    public function createConfigurator()
+    public function createConfigurator(): \RodrigoPedra\RecordProcessor\Helpers\Configurator
     {
         return new WriterConfigurator($this, true, true);
     }

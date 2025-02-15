@@ -6,8 +6,5 @@ use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 
 interface ConfigurableReader extends Configurable, Reader
 {
-    /**
-     * @return Configurator
-     */
-    public function createConfigurator();
+    public function createConfigurator(): Configurator;
 }

@@ -15,11 +15,9 @@ abstract class FileReader implements Reader
         valid as iteratorValid;
     }
 
-    /** @var SplFileObject|null */
-    protected $file = null;
+    protected ?SplFileObject $file = null;
 
-    /** @var FileInfo|null */
-    protected $fileInfo = null;
+    protected null|\SplFileInfo|FileInfo $fileInfo = null;
 
     public function __construct($file)
     {
@@ -27,12 +25,12 @@ abstract class FileReader implements Reader
         $this->fileInfo = $this->file->getFileInfo(FileInfo::class);
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
     }
 
-    public function close()
+    public function close(): void
     {
         $this->setInnerIterator(null);
     }

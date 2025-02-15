@@ -7,24 +7,24 @@ use Iterator;
 trait HasInnerIterator
 {
     /** @var Iterator|null */
-    protected $iterator = null;
+    protected ?Iterator $iterator = null;
 
-    public function current()
+    public function current(): mixed
     {
         return $this->iterator->current();
     }
 
-    public function next()
+    public function next(): void
     {
         $this->iterator->next();
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->lineCount;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $valid = ! is_null($this->iterator) && $this->iterator->valid();
 
@@ -35,19 +35,19 @@ trait HasInnerIterator
         return $valid;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->lineCount = 0;
 
         $this->iterator->rewind();
     }
 
-    public function getInnerIterator()
+    public function getInnerIterator(): ?Iterator
     {
         return $this->iterator;
     }
 
-    protected function setInnerIterator(Iterator $iterator = null)
+    protected function setInnerIterator(Iterator $iterator = null): void
     {
         $this->iterator = $iterator;
     }

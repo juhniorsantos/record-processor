@@ -18,14 +18,9 @@ class Processor implements ProcessorContract
 {
     use CountsRecords;
 
-    /** @var  Source */
-    protected $source;
-
-    /** @var  PipelineBuilder */
-    protected $stages;
-
-    /** @var  PipelineBuilder */
-    protected $flushers;
+    protected Source $source;
+    protected PipelineBuilder $stages;
+    protected PipelineBuilder $flushers;
 
     public function __construct(Source $source)
     {
@@ -34,7 +29,7 @@ class Processor implements ProcessorContract
         $this->flushers = new PipelineBuilder;
     }
 
-    public function process()
+    public function process(): ProcessorOutput
     {
         $this->recordCount = 0;
 
@@ -60,10 +55,8 @@ class Processor implements ProcessorContract
                 }
             }
 
-            /** @var \League\Pipeline\Pipeline $flushers */
             $flushers = $this->flushers->build();
 
-            /** @var FlushPayload $payload */
             $payload = $flushers->process(new FlushPayload);
 
             $results = new ProcessorOutput(
@@ -80,7 +73,7 @@ class Processor implements ProcessorContract
         }
     }
 
-    public function addStage(ProcessorStage $stage)
+    public function addStage(ProcessorStage $stage): void
     {
         if ($stage instanceof ProcessorStageHandler) {
             $this->addProcessorStageHandler($stage);
@@ -91,14 +84,14 @@ class Processor implements ProcessorContract
         }
     }
 
-    protected function addProcessorStageHandler(ProcessorStageHandler $stage)
+    protected function addProcessorStageHandler(ProcessorStageHandler $stage): void
     {
         $this->stages->add(function (Record $record = null) use ($stage) {
             return $stage->handle($record);
         });
     }
 
-    protected function addProcessorStageFlusher(ProcessorStageFlusher $stage)
+    protected function addProcessorStageFlusher(ProcessorStageFlusher $stage): void
     {
         $this->flushers->add(function (FlushPayload $payload) use ($stage) {
             return $stage->flush($payload);

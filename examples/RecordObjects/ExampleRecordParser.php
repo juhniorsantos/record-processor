@@ -9,7 +9,7 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
 class ExampleRecordParser implements RecordParser
 {
-    public function parseRecord(Reader $reader, $rawContent)
+    public function parseRecord(Reader $reader, $rawContent): \RodrigoPedra\RecordProcessor\Contracts\Record
     {
         if (is_string($rawContent)) {
             $rawContent = explode('|', $rawContent);
