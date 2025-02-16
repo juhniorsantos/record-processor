@@ -6,22 +6,14 @@ use function RodrigoPedra\RecordProcessor\value_or_null;
 
 trait HasPrefix
 {
-    /** @var  string */
-    protected $prefix;
+    protected ?string $prefix;
 
-    /**
-     * @return string
-     */
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
 
-    /**
-     * @param  string  $prefix
-     * @return void
-     */
-    public function setPrefix($prefix)
+    public function setPrefix(string $prefix): void
     {
         $this->prefix = value_or_null($prefix);
     }

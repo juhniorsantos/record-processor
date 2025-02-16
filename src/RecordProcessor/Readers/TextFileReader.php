@@ -4,29 +4,23 @@ namespace RodrigoPedra\RecordProcessor\Readers;
 
 use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 
-/**
- * Class TextReader
- *
- * @property  \SplFileObject $iterator
- * @package RodrigoPedra\Converters\Readers
- */
 class TextFileReader extends FileReader
 {
-    public function open()
+    public function open(): void
     {
         parent::open();
 
         $this->setInnerIterator($this->file);
     }
 
-    public function current()
+    public function current(): mixed
     {
         $content = $this->iteratorCurrent();
 
         return rtrim($content, NewLines::WINDOWS_NEWLINE); // removes line endings
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->iteratorValid() && ! $this->iterator->eof();
     }

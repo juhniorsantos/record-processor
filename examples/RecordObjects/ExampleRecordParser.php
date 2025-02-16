@@ -4,8 +4,8 @@ namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
 use Illuminate\Support\Arr;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
-use RodrigoPedra\RecordProcessor\Records\InvalidRecord;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
+use RodrigoPedra\RecordProcessor\Records\InvalidRecord;
 
 class ExampleRecordParser implements RecordParser
 {

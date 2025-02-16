@@ -3,13 +3,7 @@
 namespace RodrigoPedra\RecordProcessor;
 
 if (! function_exists('value_or_null')) {
-    /**
-     * Return the default value of the given value or null if the value is empty.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    function value_or_null($value)
+    function value_or_null(mixed $value): mixed
     {
         $value = value($value);
 
@@ -32,13 +26,7 @@ if (! function_exists('value_or_null')) {
 }
 
 if (! function_exists('is_associative_array')) {
-    /**
-     * Check if the array is an associative array
-     *
-     * @param  array  $value
-     * @return bool
-     */
-    function is_associative_array($value)
+    function is_associative_array(array $value): bool
     {
         return is_array($value) && array_diff_key($value, array_keys(array_keys($value)));
     }

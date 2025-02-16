@@ -6,7 +6,6 @@ use Iterator;
 
 trait HasInnerIterator
 {
-    /** @var Iterator|null */
     protected ?Iterator $iterator = null;
 
     public function current(): mixed
@@ -47,7 +46,7 @@ trait HasInnerIterator
         return $this->iterator;
     }
 
-    protected function setInnerIterator(Iterator $iterator = null): void
+    protected function setInnerIterator(?Iterator $iterator = null): void
     {
         $this->iterator = $iterator;
     }

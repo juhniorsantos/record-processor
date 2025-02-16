@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
 use Illuminate\Support\Arr;
-use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecord;
+use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 
 $items = [
     ['Rodrigo', 'rodrigo@example.com', 'rodrigo@example.org'],

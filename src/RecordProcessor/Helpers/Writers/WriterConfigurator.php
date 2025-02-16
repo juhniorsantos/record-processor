@@ -3,30 +3,28 @@
 namespace RodrigoPedra\RecordProcessor\Helpers\Writers;
 
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Helpers\Configurator;
-use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
-use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
-use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Records\Formatter\ArrayRecordFormatter;
 use RodrigoPedra\RecordProcessor\Records\Formatter\CallbackRecordFormatter;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
+use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
 
 /**
  * Class WriterConfigurator
- *
- * @package RodrigoPedra\RecordProcessor\Helpers
  */
 class WriterConfigurator extends Configurator
 {
     use HasHeader, HasTrailler;
 
-    /** @var  bool */
+    /** @var bool */
     protected $hasHeader;
 
-    /** @var  bool */
+    /** @var bool */
     protected $hasTrailler;
 
-    /** @var  RecordFormatter|null */
+    /** @var RecordFormatter|null */
     protected $recordFormatter = null;
 
     public function __construct(ConfigurableWriter $writer, $hasHeader = false, $hasTrailler = false)
@@ -37,7 +35,7 @@ class WriterConfigurator extends Configurator
         $this->hasTrailler = $hasTrailler;
     }
 
-    public function getRecordFormatter(RecordFormatter $defaultRecordFormatter = null)
+    public function getRecordFormatter(?RecordFormatter $defaultRecordFormatter = null)
     {
         if (is_null($this->recordFormatter)) {
             return $defaultRecordFormatter ?: new ArrayRecordFormatter;

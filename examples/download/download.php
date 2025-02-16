@@ -1,16 +1,16 @@
 <?php
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 use RodrigoPedra\RecordProcessor\Stages\DownloadFileOutput;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 
-$storagePath = __DIR__ . '/../../storage/';
+$storagePath = __DIR__.'/../../storage/';
 
 $processor = (new ProcessorBuilder)
-    ->readFromCSVFile($storagePath . 'input.csv')
-    ->writeToExcelFile($storagePath . 'output.xlsx', function (WriterConfigurator $configurator) {
+    ->readFromCSVFile($storagePath.'input.csv')
+    ->writeToExcelFile($storagePath.'output.xlsx', function (WriterConfigurator $configurator) {
         $configurator->setHeader(['name', 'email']);
     })
     ->downloadFileOutput('report.xlsx', DownloadFileOutput::DELETE_FILE_AFTER_DOWNLOAD)

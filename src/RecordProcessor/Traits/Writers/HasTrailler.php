@@ -3,20 +3,19 @@
 namespace RodrigoPedra\RecordProcessor\Traits\Writers;
 
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon;
 use RodrigoPedra\RecordProcessor\Exceptions\InvalidAddonException;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon;
 
 trait HasTrailler
 {
-    /** @var WriterAddon|null */
-    protected $trailler = null;
+    protected ?WriterAddon $trailler = null;
 
-    public function getTrailler()
+    public function getTrailler(): ?WriterAddon
     {
         return $this->trailler;
     }
 
-    public function setTrailler($trailler)
+    public function setTrailler($trailler): static
     {
         if (is_null($trailler)) {
             return $this;

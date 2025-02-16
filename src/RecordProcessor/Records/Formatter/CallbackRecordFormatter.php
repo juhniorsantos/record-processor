@@ -3,8 +3,8 @@
 namespace RodrigoPedra\RecordProcessor\Records\Formatter;
 
 use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
+use RodrigoPedra\RecordProcessor\Contracts\Writer;
 
 class CallbackRecordFormatter implements RecordFormatter
 {
@@ -16,7 +16,7 @@ class CallbackRecordFormatter implements RecordFormatter
         $this->callback = $callback;
     }
 
-    public function formatRecord(Writer $writer, Record $record)
+    public function formatRecord(Writer $writer, Record $record): bool
     {
         $data = call_user_func_array($this->callback, [$record]);
 

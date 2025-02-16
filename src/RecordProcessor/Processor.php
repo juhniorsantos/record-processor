@@ -2,24 +2,26 @@
 
 namespace RodrigoPedra\RecordProcessor;
 
-use RuntimeException;
 use League\Pipeline\PipelineBuilder;
-use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Traits\CountsRecords;
+use RodrigoPedra\RecordProcessor\Contracts\Processor as ProcessorContract;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
+use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Helpers\StopOnNullPipelineProcessor;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 use RodrigoPedra\RecordProcessor\Stages\TransferObjects\ProcessorOutput;
-use RodrigoPedra\RecordProcessor\Contracts\Processor as ProcessorContract;
+use RodrigoPedra\RecordProcessor\Traits\CountsRecords;
+use RuntimeException;
 
 class Processor implements ProcessorContract
 {
     use CountsRecords;
 
     protected Source $source;
+
     protected PipelineBuilder $stages;
+
     protected PipelineBuilder $flushers;
 
     public function __construct(Source $source)
@@ -86,7 +88,7 @@ class Processor implements ProcessorContract
 
     protected function addProcessorStageHandler(ProcessorStageHandler $stage): void
     {
-        $this->stages->add(function (Record $record = null) use ($stage) {
+        $this->stages->add(function (?Record $record = null) use ($stage) {
             return $stage->handle($record);
         });
     }

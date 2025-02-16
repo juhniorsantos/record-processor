@@ -4,15 +4,14 @@ namespace RodrigoPedra\RecordProcessor\Traits;
 
 trait CountsRecords
 {
-    /** @var int */
-    protected $recordCount = 0;
+    protected int $recordCount = 0;
 
-    public function getRecordCount()
+    public function getRecordCount(): int
     {
         return $this->recordCount;
     }
 
-    protected function incrementRecordCount($amount = 1)
+    protected function incrementRecordCount($amount = 1): void
     {
         $this->recordCount += $amount;
     }

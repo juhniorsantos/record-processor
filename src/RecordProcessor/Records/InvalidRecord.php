@@ -6,27 +6,27 @@ use RodrigoPedra\RecordProcessor\Contracts\Record;
 
 class InvalidRecord implements Record
 {
-    public function get(string $field, ?string $default = null)
+    public function get($key, $default = null): string
     {
         return '';
     }
 
-    public function set(string $field, ?string $value)
+    public function set($key, $value): void
     {
         //
     }
 
-    public function getKey()
+    public function getKey(): ?string
     {
         return '';
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return false;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [];
     }

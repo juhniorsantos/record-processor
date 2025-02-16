@@ -2,25 +2,25 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples;
 
-use PDO;
 use ArrayIterator;
 use Illuminate\Support\Arr;
-use InvalidArgumentException;
 use Illuminate\Support\Collection;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
-use RodrigoPedra\RecordProcessor\ProcessorBuilder;
-use Symfony\Component\Console\Input\InputArgument;
-use RodrigoPedra\RecordProcessor\Writers\PDOWriter;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use RodrigoPedra\RecordProcessor\Helpers\Excel\Formats;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterCallbackProxy;
+use InvalidArgumentException;
+use PDO;
 use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
-use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordParser;
-use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
 use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordAggregateFormatter;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordFormatter;
+use RodrigoPedra\RecordProcessor\Examples\RecordObjects\ExampleRecordParser;
+use RodrigoPedra\RecordProcessor\Helpers\Excel\Formats;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterCallbackProxy;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\ProcessorBuilder;
+use RodrigoPedra\RecordProcessor\Writers\PDOWriter;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class ExamplesCommand extends Command
 {
@@ -92,10 +92,10 @@ class ExamplesCommand extends Command
 
             $output = $processor->process();
 
-            $logger->info('input lines: ' . $output->getInputLineCount());
-            $logger->info('input records: ' . $output->getInputRecordCount());
-            $logger->info('output lines: ' . $output->getOutputRecordCount());
-            $logger->info('output records: ' . $output->getOutputRecordCount());
+            $logger->info('input lines: '.$output->getInputLineCount());
+            $logger->info('input records: '.$output->getInputRecordCount());
+            $logger->info('output lines: '.$output->getOutputRecordCount());
+            $logger->info('output records: '.$output->getOutputRecordCount());
 
             if ($output->hasOutput()) {
                 $logger->info('output: ', Arr::wrap($output->getOutput()));
@@ -106,7 +106,7 @@ class ExamplesCommand extends Command
             $time_end = microtime(true);
             $execution_time = ($time_end - $time_start);
 
-            $logger->info('Total Execution Time: ' . $execution_time . ' seconds');
+            $logger->info('Total Execution Time: '.$execution_time.' seconds');
         }
 
         return Command::SUCCESS;
@@ -132,9 +132,9 @@ class ExamplesCommand extends Command
             case 'collection':
                 return $builder->readFromCollection(new Collection($this->sampleData()));
             case 'csv':
-                return $builder->readFromCSVFile($inputPath . '.csv');
+                return $builder->readFromCSVFile($inputPath.'.csv');
             case 'excel':
-                return $builder->readFromExcelFile($inputPath . '.xlsx');
+                return $builder->readFromExcelFile($inputPath.'.xlsx');
             case 'iterator':
                 return $builder->readFromIterator(new ArrayIterator($this->sampleData()));
             case 'pdo':
@@ -143,7 +143,7 @@ class ExamplesCommand extends Command
 
                 return $builder->readFromPDO($pdo, $query);
             case 'text':
-                return $builder->readFromTextFile($inputPath . '.txt');
+                return $builder->readFromTextFile($inputPath.'.txt');
             default:
                 throw new InvalidArgumentException('Invalid reader');
         }
@@ -164,7 +164,7 @@ class ExamplesCommand extends Command
             case 'collection':
                 return $builder->writeToCollection();
             case 'csv':
-                return $builder->writeToCSVFile($outputPath . '.csv', function (WriterConfigurator $configurator) {
+                return $builder->writeToCSVFile($outputPath.'.csv', function (WriterConfigurator $configurator) {
                     $configurator->setHeader(['name', 'email']);
                 });
             case 'echo':
@@ -172,13 +172,13 @@ class ExamplesCommand extends Command
                     $configurator->setPrefix('PERSIST');
                 });
             case 'excel':
-                return $builder->writeToExcelFile($outputPath . '.xlsx',
+                return $builder->writeToExcelFile($outputPath.'.xlsx',
                     function (WriterConfigurator $configurator) {
                         $configurator->setHeader(['name', 'email']);
 
                         $configurator->setTrailler(function (WriterCallbackProxy $proxy) {
-                            $proxy->append([$proxy->getRecordCount() . ' records']);
-                            $proxy->append([($proxy->getLineCount() + 1) . ' lines']);
+                            $proxy->append([$proxy->getRecordCount().' records']);
+                            $proxy->append([($proxy->getLineCount() + 1).' lines']);
                         });
 
                         $configurator->setWorkbookConfigurator(function ($workbook) {
@@ -211,7 +211,7 @@ class ExamplesCommand extends Command
                     $configurator->setTableIdAttribute('my-table');
                 });
             case 'json':
-                return $builder->writeToJSONFile($outputPath . '.json');
+                return $builder->writeToJSONFile($outputPath.'.json');
             case 'log':
                 return $builder->writeToLog(function (WriterConfigurator $configurator) {
                     $configurator->setPrefix('PERSIST');
@@ -222,7 +222,7 @@ class ExamplesCommand extends Command
 
                 return $builder->writeToPDO($pdo, 'users', ['name', 'email'], $writer === 'pdo-buffered');
             case 'text':
-                return $builder->writeToTextFile($outputPath . '.txt');
+                return $builder->writeToTextFile($outputPath.'.txt');
             default:
                 throw new InvalidArgumentException('Invalid writer');
         }
@@ -230,7 +230,7 @@ class ExamplesCommand extends Command
 
     protected function storagePath($file)
     {
-        return __DIR__ . '/../storage/' . $file;
+        return __DIR__.'/../storage/'.$file;
     }
 
     protected function makeConnection()

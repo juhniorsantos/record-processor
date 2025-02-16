@@ -9,14 +9,9 @@ use RodrigoPedra\RecordProcessor\Records\Formatter\CallbackRecordFormatter;
 
 trait BuildsFormatter
 {
-    /** @var  RecordFormatter */
-    protected $recordFormatter;
+    protected ?RecordFormatter $recordFormatter;
 
-    /**
-     * @param  RecordFormatter|callable  $recordFormatter
-     * @return $this
-     */
-    public function usingFormatter($recordFormatter = null)
+    public function usingFormatter(callable|RecordFormatter|null $recordFormatter = null): static
     {
         if (is_callable($recordFormatter)) {
             $this->recordFormatter = new CallbackRecordFormatter($recordFormatter);
@@ -33,7 +28,7 @@ trait BuildsFormatter
         return $this;
     }
 
-    protected function getRecordFormatter()
+    protected function getRecordFormatter(): RecordFormatter|ArrayRecordFormatter
     {
         if (is_null($this->recordFormatter)) {
             return new ArrayRecordFormatter;

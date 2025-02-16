@@ -2,8 +2,8 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
-use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
+use RodrigoPedra\RecordProcessor\Contracts\Record;
 
 class ValidRecords implements ProcessorStageHandler
 {

@@ -16,14 +16,14 @@ class IteratorReader implements Reader
         $this->setInnerIterator($iterator);
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
 
         $this->iterator->rewind();
     }
 
-    public function close()
+    public function close(): void
     {
         //
     }

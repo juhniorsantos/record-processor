@@ -2,11 +2,11 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use RodrigoPedra\RecordProcessor\Helpers\FileConfig;
-use SplFileObject;
-use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
+use RodrigoPedra\RecordProcessor\Helpers\FileConfig;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
+use SplFileObject;
 
 abstract class FileWriter implements Writer
 {
@@ -35,9 +35,6 @@ abstract class FileWriter implements Writer
         //
     }
 
-    /**
-     * @return mixed
-     */
     public function output(): mixed
     {
         return FileInfo::createReadableFileObject($this->file, 'rb');

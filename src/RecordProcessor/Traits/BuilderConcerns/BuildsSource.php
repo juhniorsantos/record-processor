@@ -3,21 +3,16 @@
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Source;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 use RodrigoPedra\RecordProcessor\Records\Parsers\ArrayRecordParser;
 use RodrigoPedra\RecordProcessor\Records\Parsers\CallbackRecordParser;
+use RodrigoPedra\RecordProcessor\Source;
 
 trait BuildsSource
 {
-    /** @var  RecordParser */
-    protected $recordParser;
+    protected RecordParser $recordParser;
 
-    /**
-     * @param  RecordParser|callable  $recordParser
-     * @return $this
-     */
-    public function usingParser($recordParser)
+    public function usingParser(callable|RecordParser $recordParser): static
     {
         if (is_callable($recordParser)) {
             $this->recordParser = new CallbackRecordParser($recordParser);
@@ -34,7 +29,7 @@ trait BuildsSource
         return $this;
     }
 
-    protected function getRecordParser()
+    protected function getRecordParser(): RecordParser|ArrayRecordParser
     {
         if (is_null($this->recordParser)) {
             return new ArrayRecordParser;
@@ -43,7 +38,7 @@ trait BuildsSource
         return $this->recordParser;
     }
 
-    protected function makeSource()
+    protected function makeSource(): Source
     {
         $recordParser = $this->getRecordParser();
 

@@ -2,24 +2,24 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages\TransferObjects;
 
-use SplFileInfo;
 use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
+use SplFileInfo;
 
 class ProcessorOutput
 {
-    /** @var  int */
+    /** @var int */
     protected $inputLineCount = 0;
 
     /** @var int */
     protected $inputRecordCount = 0;
 
-    /** @var  int */
+    /** @var int */
     protected $outputLineCount = 0;
 
     /** @var int */
     protected $outputRecordCount = 0;
 
-    /** @var  mixed */
+    /** @var mixed */
     protected $output = null;
 
     /**

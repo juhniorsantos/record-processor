@@ -17,7 +17,7 @@ class DeferredStageBuilder implements ProcessorStage
 
     /**
      * @param  array  ...$parameters
-     * @return  ProcessorStage
+     * @return ProcessorStage
      */
     public function build(...$parameters)
     {

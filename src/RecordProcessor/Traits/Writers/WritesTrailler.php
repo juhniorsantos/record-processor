@@ -4,9 +4,8 @@ namespace RodrigoPedra\RecordProcessor\Traits\Writers;
 
 trait WritesTrailler
 {
-    protected function writeTrailler()
+    protected function writeTrailler(): void
     {
-        /** @var \RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon|null $trailler */
         $trailler = $this->getTrailler();
 
         if (is_null($trailler)) {

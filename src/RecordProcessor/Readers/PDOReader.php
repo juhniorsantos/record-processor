@@ -2,6 +2,7 @@
 
 namespace RodrigoPedra\RecordProcessor\Readers;
 
+use Iterator;
 use PDO;
 use PDOStatement;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
@@ -11,40 +12,32 @@ class PDOReader implements Reader
 {
     use CountsLines;
 
-    /** @var PDO */
-    protected $pdo = null;
+    protected ?PDO $pdo = null;
 
-    /** @var PDOStatement */
-    protected $reader = null;
+    protected ?PDOStatement $reader = null;
 
-    /** @var string */
-    protected $query;
+    protected string $query;
 
-    /** @var array */
-    protected $queryParameters = [];
+    protected ?array $queryParameters = [];
 
-    /** @var array */
-    protected $currentRecord = false;
+    protected array|bool|null $currentRecord = false;
 
     public function __construct(PDO $pdo, $query)
     {
         $this->pdo = $pdo;
         $this->query = $query;
 
-        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql') {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $this->pdo->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         }
     }
 
-    /**
-     * @param  array  $queryParameters
-     */
-    public function setQueryParameters(array $queryParameters)
+    public function setQueryParameters(array $queryParameters): void
     {
         $this->queryParameters = $queryParameters;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
 
@@ -58,7 +51,7 @@ class PDOReader implements Reader
         $this->currentRecord = null;
     }
 
-    public function close()
+    public function close(): void
     {
         $this->reader = null;
         $this->pdo = null;
@@ -66,22 +59,22 @@ class PDOReader implements Reader
         $this->currentRecord = false;
     }
 
-    public function current()
+    public function current(): mixed
     {
         return $this->currentRecord;
     }
 
-    public function next()
+    public function next(): void
     {
         $this->currentRecord = $this->reader->fetch() ?: null;
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->lineCount;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $valid = ! is_null($this->currentRecord);
 
@@ -92,7 +85,7 @@ class PDOReader implements Reader
         return $valid;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         if (! is_null($this->currentRecord)) {
             $this->reader->closeCursor();
@@ -106,7 +99,7 @@ class PDOReader implements Reader
         $this->currentRecord = $this->reader->fetch() ?: null;
     }
 
-    public function getInnerIterator()
+    public function getInnerIterator(): Iterator|static
     {
         return $this;
     }

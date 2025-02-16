@@ -2,11 +2,11 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples;
 
-use Symfony\Component\Process\Process;
+use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use RodrigoPedra\RecordProcessor\Examples\Loggers\ConsoleOutputLogger;
+use Symfony\Component\Process\Process;
 
 class DownloadCommand extends Command
 {
@@ -21,7 +21,7 @@ class DownloadCommand extends Command
     {
         $logger = new ConsoleOutputLogger($output);
 
-        $assetsDirectory = __DIR__ . DIRECTORY_SEPARATOR . 'download';
+        $assetsDirectory = __DIR__.DIRECTORY_SEPARATOR.'download';
         $command = "php -S localhost:8080 -t {$assetsDirectory}";
 
         $process = new Process($command);

@@ -2,10 +2,11 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
-use RodrigoPedra\RecordProcessor\Traits\HasPrefix;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Traits\HasPrefix;
+use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 
 class EchoWriter extends FileWriter implements ConfigurableWriter
 {
@@ -16,21 +17,17 @@ class EchoWriter extends FileWriter implements ConfigurableWriter
         parent::__construct('php://output');
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
     }
 
-    /**
-     * @param  mixed  $content
-     * @return void
-     */
-    public function append(mixed $content)
+    public function append(mixed $content): void
     {
         $prefix = $this->getPrefix();
 
-        if (is_string($prefix)) {
-            $this->file->fwrite($prefix . ': ');
+        if ($prefix) {
+            $this->file->fwrite($prefix.': ');
         }
 
         if (! is_string($content)) {
@@ -44,12 +41,12 @@ class EchoWriter extends FileWriter implements ConfigurableWriter
         $this->incrementLineCount();
     }
 
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return ['setPrefix'];
     }
 
-    public function createConfigurator()
+    public function createConfigurator(): Configurator
     {
         return new WriterConfigurator($this, true, true);
     }

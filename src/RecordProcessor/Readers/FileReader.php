@@ -2,11 +2,11 @@
 
 namespace RodrigoPedra\RecordProcessor\Readers;
 
-use SplFileObject;
-use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
 use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Traits\Readers\HasInnerIterator;
+use SplFileObject;
 
 abstract class FileReader implements Reader
 {

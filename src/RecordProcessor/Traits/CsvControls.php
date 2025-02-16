@@ -11,55 +11,24 @@ use RodrigoPedra\RecordProcessor\Contracts\NewLines;
  * \League\Csv\Config\AbstractCsv
  *
  * @license http://opensource.org/licenses/MIT
+ *
  * @link    https://github.com/thephpleague/csv/
+ *
  * @version 9.0.1
- * @package League.csv
  */
 trait CsvControls
 {
-    /**
-     * the field delimiter (one character only)
-     *
-     * @var string
-     */
-    protected $delimiter = ',';
+    protected string $delimiter = ',';
 
-    /**
-     * the field enclosure character (one character only)
-     *
-     * @var string
-     */
-    protected $enclosure = '"';
+    protected string $enclosure = '"';
 
-    /**
-     * the field escape character (one character only)
-     *
-     * @var string
-     */
-    protected $escape = '\\';
+    protected string $escape = '\\';
 
-    /**
-     * newline character
-     *
-     * @var string
-     */
-    protected $newline = NewLines::UNIX_NEWLINE;
+    protected string $newline = NewLines::UNIX_NEWLINE;
 
-    /**
-     * The Output file BOM character
-     *
-     * @var string
-     */
-    protected $outputBOM = '';
+    protected string $outputBOM = '';
 
-    /**
-     * Sets the field delimiter
-     *
-     * @param  string  $delimiter
-     * @return void
-     * @throws InvalidArgumentException If $delimiter is not a single character
-     */
-    public function setDelimiter($delimiter)
+    public function setDelimiter(string $delimiter): void
     {
         if (! $this->isValidCsvControls($delimiter)) {
             throw new InvalidArgumentException('The delimiter must be a single character');
@@ -67,24 +36,12 @@ trait CsvControls
         $this->delimiter = $delimiter;
     }
 
-    /**
-     * Returns the current field delimiter
-     *
-     * @return string
-     */
-    public function getDelimiter()
+    public function getDelimiter(): string
     {
         return $this->delimiter;
     }
 
-    /**
-     * Sets the field enclosure
-     *
-     * @param  string  $enclosure
-     * @return void
-     * @throws InvalidArgumentException If $enclosure is not a single character
-     */
-    public function setEnclosure($enclosure)
+    public function setEnclosure(string $enclosure): void
     {
         if (! $this->isValidCsvControls($enclosure)) {
             throw new InvalidArgumentException('The enclosure must be a single character');
@@ -92,24 +49,12 @@ trait CsvControls
         $this->enclosure = $enclosure;
     }
 
-    /**
-     * Returns the current field enclosure
-     *
-     * @return string
-     */
-    public function getEnclosure()
+    public function getEnclosure(): string
     {
         return $this->enclosure;
     }
 
-    /**
-     * Sets the field escape character
-     *
-     * @param  string  $escape
-     * @return void
-     * @throws InvalidArgumentException If $escape is not a single character
-     */
-    public function setEscape($escape)
+    public function setEscape(string $escape): void
     {
         if (! $this->isValidCsvControls($escape)) {
             throw new InvalidArgumentException('The escape character must be a single character');
@@ -117,66 +62,33 @@ trait CsvControls
         $this->escape = $escape;
     }
 
-    /**
-     * Returns the current field escape character
-     *
-     * @return string
-     */
-    public function getEscape()
+    public function getEscape(): string
     {
         return $this->escape;
     }
 
-    /**
-     * Sets the newline sequence characters
-     *
-     * @param  string  $newline
-     * @return void
-     */
-    public function setNewline($newline)
+    public function setNewline(string $newline): void
     {
-        $this->newline = (string)$newline;
+        $this->newline = (string) $newline;
     }
 
-    /**
-     * Returns the current newline sequence characters
-     *
-     * @return string
-     */
-    public function getNewline()
+    public function getNewline(): string
     {
         return $this->newline;
     }
 
-    /**
-     * Sets the BOM sequence in use
-     *
-     * @param  string  $str The BOM sequence
-     * @return void
-     */
-    public function setOutputBOM($str)
+    public function setOutputBOM(string $str): void
     {
-        $this->outputBOM = (string)$str;
+        $this->outputBOM = (string) $str;
     }
 
-    /**
-     * Returns the BOM sequence in use
-     *
-     * @return string
-     */
-    public function getOutputBOM()
+    public function getOutputBOM(): string
     {
         return $this->outputBOM;
     }
 
-    /**
-     * Tell whether the submitted string is a valid CSV Control character
-     *
-     * @param  string  $str The submitted string
-     * @return bool
-     */
-    protected function isValidCsvControls($str)
+    protected function isValidCsvControls(string $str): bool
     {
-        return 1 == mb_strlen($str);
+        return mb_strlen($str) === 1;
     }
 }

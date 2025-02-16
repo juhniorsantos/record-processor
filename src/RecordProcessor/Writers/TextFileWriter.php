@@ -2,17 +2,17 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use RuntimeException;
-use RodrigoPedra\RecordProcessor\Contracts\NewLines;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Contracts\NewLines;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RuntimeException;
 
 class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines
 {
-    /** @var string */
-    protected $newLine = self::WINDOWS_NEWLINE;
+    protected string $newLine = self::WINDOWS_NEWLINE;
 
-    public function getNewLine()
+    public function getNewLine(): string
     {
         return $this->newLine;
     }
@@ -20,12 +20,12 @@ class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines
     /**
      * @param  string  $newLine
      */
-    public function setNewLine($newLine)
+    public function setNewLine($newLine): void
     {
         $this->newLine = $newLine;
     }
 
-    public function append(mixed $content)
+    public function append(mixed $content): void
     {
         if (! is_string($content)) {
             throw new RuntimeException('content for TextWriter should be a string');
@@ -37,12 +37,12 @@ class TextFileWriter extends FileWriter implements ConfigurableWriter, NewLines
         $this->incrementLineCount(substr_count($content, $this->getNewLine()));
     }
 
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return ['setNewLine'];
     }
 
-    public function createConfigurator()
+    public function createConfigurator(): Configurator
     {
         return new WriterConfigurator($this, true, true);
     }

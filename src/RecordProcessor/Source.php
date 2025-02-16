@@ -2,14 +2,15 @@
 
 namespace RodrigoPedra\RecordProcessor;
 
-use Traversable;
 use IteratorIterator;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
+use Traversable;
 
 class Source extends IteratorIterator
 {
     protected Reader $reader;
+
     protected RecordParser $recordParser;
 
     public function __construct(Reader $reader, RecordParser $recordParser)

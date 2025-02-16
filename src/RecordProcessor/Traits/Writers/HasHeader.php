@@ -3,20 +3,19 @@
 namespace RodrigoPedra\RecordProcessor\Traits\Writers;
 
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon;
 use RodrigoPedra\RecordProcessor\Exceptions\InvalidAddonException;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon;
 
 trait HasHeader
 {
-    /** @var WriterAddon|null */
-    protected $header = null;
+    protected ?WriterAddon $header = null;
 
-    public function getHeader()
+    public function getHeader(): ?WriterAddon
     {
         return $this->header;
     }
 
-    public function setHeader($header)
+    public function setHeader($header): static
     {
         if (is_null($header)) {
             return $this;

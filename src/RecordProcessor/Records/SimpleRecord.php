@@ -4,13 +4,11 @@ namespace RodrigoPedra\RecordProcessor\Records;
 
 use Illuminate\Support\Fluent;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Contracts\JsonRecord;
 use RodrigoPedra\RecordProcessor\Contracts\TextRecord;
-use RodrigoPedra\RecordProcessor\Writers\JSONFileWriter;
 
 class SimpleRecord extends Fluent implements Record, TextRecord
 {
-    public function get($key, $default = '')
+    public function get($key, $default = ''): mixed
     {
         return parent::get($key, $default);
     }
@@ -22,7 +20,7 @@ class SimpleRecord extends Fluent implements Record, TextRecord
 
     public function valid(): bool
     {
-        return $this->getKey() != '';
+        return $this->getKey() !== '';
     }
 
     public function getKey(): ?string
@@ -32,6 +30,6 @@ class SimpleRecord extends Fluent implements Record, TextRecord
 
     public function toText(): string
     {
-        return $this->toJson(JSONFileWriter::JSON_ENCODE_OPTIONS);
+        return implode(', ', $this->toArray());
     }
 }

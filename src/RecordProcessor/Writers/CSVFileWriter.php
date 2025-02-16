@@ -5,19 +5,19 @@ namespace RodrigoPedra\RecordProcessor\Writers;
 use Illuminate\Support\Arr;
 use League\Csv\ByteSequence;
 use League\Csv\Writer as RawCsvWriter;
-use RodrigoPedra\RecordProcessor\Contracts\NewLines;
-use RodrigoPedra\RecordProcessor\Traits\CsvControls;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Contracts\NewLines;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Traits\CsvControls;
 
-class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequence, NewLines
+class CSVFileWriter extends FileWriter implements ByteSequence, ConfigurableWriter, NewLines
 {
     use CsvControls;
 
-    const DATA_TRAILLER = '<< <<';
+    const string DATA_TRAILLER = '<< <<';
 
-    /** @var RawCsvWriter|null */
-    protected $writer = null;
+    protected ?RawCsvWriter $writer = null;
 
     public function __construct($file = null)
     {
@@ -65,7 +65,7 @@ class CSVFileWriter extends FileWriter implements ConfigurableWriter, ByteSequen
         ];
     }
 
-    public function createConfigurator(): \RodrigoPedra\RecordProcessor\Helpers\Configurator
+    public function createConfigurator(): Configurator
     {
         return new WriterConfigurator($this, true, true);
     }

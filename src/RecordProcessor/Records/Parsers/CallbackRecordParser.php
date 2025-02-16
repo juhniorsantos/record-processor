@@ -3,6 +3,7 @@
 namespace RodrigoPedra\RecordProcessor\Records\Parsers;
 
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
+use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\RecordParser;
 
 class CallbackRecordParser implements RecordParser
@@ -15,7 +16,7 @@ class CallbackRecordParser implements RecordParser
         $this->callback = $callback;
     }
 
-    public function parseRecord(Reader $reader, $rawContent)
+    public function parseRecord(Reader $reader, $rawContent): Record
     {
         return call_user_func_array($this->callback, [$rawContent]);
     }

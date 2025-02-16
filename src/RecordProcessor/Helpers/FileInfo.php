@@ -2,17 +2,21 @@
 
 namespace RodrigoPedra\RecordProcessor\Helpers;
 
+use InvalidArgumentException;
 use SplFileInfo;
 use SplFileObject;
 use SplTempFileObject;
-use InvalidArgumentException;
+
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
-class FileInfo extends SplFileInfo
+final class FileInfo extends SplFileInfo
 {
     const string INPUT_STREAM = 'php://input';
+
     const string OUTPUT_STREAM = 'php://output';
+
     const string TEMP_FILE = 'php://temp';
+
     const int TEMP_FILE_MEMORY_SIZE = 4194304; // 4MB
 
     public function getExtension(): string
@@ -61,7 +65,7 @@ class FileInfo extends SplFileInfo
     public function getBasenameWithoutExtension(): string
     {
         $extension = $this->getExtension();
-        $extension = $extension ? '.' . $extension : $extension;
+        $extension = $extension ? '.'.$extension : $extension;
 
         return $this->getBasename($extension);
     }
@@ -73,21 +77,21 @@ class FileInfo extends SplFileInfo
 
     public static function createFileObject($file, $mode): SplTempFileObject|SplFileObject
     {
-        if ($file === static::TEMP_FILE) {
-            return static::createTempFileObject();
+        if ($file === self::TEMP_FILE) {
+            return self::createTempFileObject();
         }
 
         if (is_string($file)) {
-            $fileInfo = new static($file);
+            $fileInfo = new self($file);
 
-            return $fileInfo->isTempFile() ? FileInfo::createTempFileObject() : $fileInfo->openFile($mode);
+            return $fileInfo->isTempFile() ? self::createTempFileObject() : $fileInfo->openFile($mode);
         }
 
         if (! $file instanceof SplFileObject) {
             throw new InvalidArgumentException('File should be a path to a file or a SplFileObject');
         }
 
-        $fileInfo = $file->getFileInfo(static::class);
+        $fileInfo = $file->getFileInfo(self::class);
 
         if ($fileInfo->isTempFile()) {
             return $file;
@@ -98,10 +102,10 @@ class FileInfo extends SplFileInfo
 
     public static function createWritableFileObject($file, $mode = 'wb'): SplTempFileObject|SplFileObject
     {
-        $file = static::createFileObject($file, $mode);
+        $file = self::createFileObject($file, $mode);
 
         /** @var FileInfo $fileInfo */
-        $fileInfo = $file->getFileInfo(static::class);
+        $fileInfo = $file->getFileInfo(self::class);
 
         if ($fileInfo->isTempFile()) {
             $file->ftruncate(0);
@@ -109,7 +113,7 @@ class FileInfo extends SplFileInfo
             return $file;
         }
 
-        if ($fileInfo->getPathname() === static::OUTPUT_STREAM) {
+        if ($fileInfo->getPathname() === self::OUTPUT_STREAM) {
             return $file;
         }
 
@@ -124,9 +128,9 @@ class FileInfo extends SplFileInfo
 
     public static function createReadableFileObject($file, $mode = 'rb'): SplTempFileObject|SplFileObject
     {
-        $file = static::createFileObject($file, $mode);
+        $file = self::createFileObject($file, $mode);
 
-        $fileInfo = $file->getFileInfo(static::class);
+        $fileInfo = $file->getFileInfo(self::class);
 
         if (! $fileInfo->isTempFile() && ! $fileInfo->isReadable()) {
             $fileName = $fileInfo->getPathname();

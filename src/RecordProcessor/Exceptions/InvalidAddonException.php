@@ -4,6 +4,4 @@ namespace RodrigoPedra\RecordProcessor\Exceptions;
 
 use Exception;
 
-class InvalidAddonException extends Exception
-{
-}
+class InvalidAddonException extends Exception {}

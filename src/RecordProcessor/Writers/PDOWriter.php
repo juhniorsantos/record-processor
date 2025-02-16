@@ -2,48 +2,41 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use PDO;
 use Exception;
-use PDOStatement;
-use RuntimeException;
 use InvalidArgumentException;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
+use PDO;
+use PDOStatement;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
-use function RodrigoPedra\RecordProcessor\value_or_null;
+use RodrigoPedra\RecordProcessor\Traits\CountsLines;
+use RodrigoPedra\RecordProcessor\Traits\NoOutput;
+use RuntimeException;
+
 use function RodrigoPedra\RecordProcessor\is_associative_array;
+use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class PDOWriter implements ConfigurableWriter
 {
     use CountsLines, NoOutput;
 
-    /** @var PDO */
-    protected $pdo = null;
+    protected ?PDO $pdo = null;
 
-    /** @var PDOStatement|mixed */
-    protected $writer = null;
+    protected ?PDOStatement $writer = null;
 
-    /** @var string */
-    protected $tableName;
+    protected mixed $tableName;
 
-    /** @var int */
-    protected $columnCount;
+    protected int $columnCount;
 
-    /** @var array */
-    protected $columns = [];
+    protected array $columns = [];
 
-    /** @var string */
-    protected $valuesStatement;
+    protected string $valuesStatement;
 
-    /** @var bool */
-    protected $usesTransaction = true;
+    protected bool $usesTransaction = true;
 
-    /** @var bool */
-    protected $inTransaction = false;
+    protected bool $inTransaction = false;
 
-    /** @var bool|null */
-    protected $isAssociative = null;
+    protected ?bool $isAssociative = null;
 
     public function __construct(PDO $pdo, $tableName, array $columns)
     {
@@ -59,15 +52,12 @@ class PDOWriter implements ConfigurableWriter
         $this->valuesStatement = $this->formatValuesString($this->columnCount);
     }
 
-    /**
-     * @param  bool  $usesTransaction
-     */
-    public function setUsesTransaction($usesTransaction)
+    public function setUsesTransaction(bool $usesTransaction): void
     {
         $this->usesTransaction = $usesTransaction;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
 
@@ -77,7 +67,7 @@ class PDOWriter implements ConfigurableWriter
         }
     }
 
-    public function close()
+    public function close(): void
     {
         if ($this->inTransaction) {
             $this->pdo->commit();
@@ -88,11 +78,9 @@ class PDOWriter implements ConfigurableWriter
     }
 
     /**
-     * @param  mixed  $content
-     * @return void
      * @throws Exception
      */
-    public function append(mixed $content)
+    public function append(mixed $content): void
     {
         if (! is_array($content)) {
             throw new RuntimeException('content for PDOWriter should be an array');
@@ -117,7 +105,7 @@ class PDOWriter implements ConfigurableWriter
         }
     }
 
-    protected function prepareWriter($count)
+    protected function prepareWriter($count): false|PDOStatement|null
     {
         if (! is_null($this->writer)) {
             return $this->writer;
@@ -130,7 +118,7 @@ class PDOWriter implements ConfigurableWriter
         return $this->writer;
     }
 
-    protected function formatQueryStatement($count)
+    protected function formatQueryStatement($count): string
     {
         $tokens = [
             'INSERT INTO',
@@ -143,22 +131,22 @@ class PDOWriter implements ConfigurableWriter
         return implode(' ', $tokens);
     }
 
-    protected function formatValuesString($valuesQuantity)
+    protected function formatValuesString($valuesQuantity): string
     {
-        return '(' . implode(',', array_fill(0, $valuesQuantity, '?')) . ')';
+        return '('.implode(',', array_fill(0, $valuesQuantity, '?')).')';
     }
 
-    protected function sanitizeColumns(array $columns)
+    protected function sanitizeColumns(array $columns): string
     {
         $columns = value_or_null($columns);
         $columns = array_map(function ($column) {
             return value_or_null($column);
         }, $columns);
 
-        return '(' . implode(',', $columns) . ')';
+        return '('.implode(',', $columns).')';
     }
 
-    protected function prepareValuesForInsert(array $values)
+    protected function prepareValuesForInsert(array $values): array
     {
         if (count($values) !== $this->columnCount) {
             throw new RuntimeException('Record column count does not match PDOWriter column definition');
@@ -181,12 +169,12 @@ class PDOWriter implements ConfigurableWriter
         return $values;
     }
 
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return ['setUsesTransaction'];
     }
 
-    public function createConfigurator()
+    public function createConfigurator(): Configurator
     {
         return new WriterConfigurator($this, false, false);
     }

@@ -2,12 +2,12 @@
 
 namespace RodrigoPedra\RecordProcessor\Examples\RecordObjects;
 
-use RuntimeException;
-use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
-use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
-use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
+use RodrigoPedra\RecordProcessor\Contracts\Writer;
+use RodrigoPedra\RecordProcessor\Records\SimpleRecord;
+use RuntimeException;
 
 class ExampleRecordAggregateFormatter implements RecordFormatter
 {
@@ -20,7 +20,6 @@ class ExampleRecordAggregateFormatter implements RecordFormatter
     }
 
     /**
-     * @param  Writer  $writer
      * @param  RecordAggregate|Record  $master
      * @return bool
      */

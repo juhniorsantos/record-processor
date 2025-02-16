@@ -6,16 +6,13 @@ use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
 
 trait ConfiguresExcelWriter
 {
-    /** @var  callable|null */
+    /** @var callable|null */
     protected $workbookConfigurator = null;
 
-    /** @var  callable|null */
+    /** @var callable|null */
     protected $worksheetConfigurator = null;
 
-    /**
-     * @return callable|null
-     */
-    public function getWorkbookConfigurator()
+    public function getWorkbookConfigurator(): ?callable
     {
         if (is_null($this->workbookConfigurator)) {
             return null;
@@ -26,18 +23,12 @@ trait ConfiguresExcelWriter
         };
     }
 
-    /**
-     * @param  callable  $workbookConfigurator
-     */
-    public function setWorkbookConfigurator(callable $workbookConfigurator)
+    public function setWorkbookConfigurator(callable $workbookConfigurator): void
     {
         $this->workbookConfigurator = $workbookConfigurator;
     }
 
-    /**
-     * @return callable
-     */
-    public function getWorksheetConfigurator()
+    public function getWorksheetConfigurator(): ?callable
     {
         if (is_null($this->worksheetConfigurator)) {
             return null;
@@ -48,15 +39,12 @@ trait ConfiguresExcelWriter
         };
     }
 
-    /**
-     * @param  callable  $worksheetConfigurator
-     */
-    public function setWorksheetConfigurator(callable $worksheetConfigurator)
+    public function setWorksheetConfigurator(callable $worksheetConfigurator): void
     {
         $this->worksheetConfigurator = $worksheetConfigurator;
     }
 
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return [
             'setWorkbookConfigurator',
@@ -64,9 +52,8 @@ trait ConfiguresExcelWriter
         ];
     }
 
-    public function createConfigurator()
+    public function createConfigurator(): WriterConfigurator
     {
-        /** @var \RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter $this */
         return new WriterConfigurator($this, true, true);
     }
 }

@@ -5,11 +5,12 @@ namespace RodrigoPedra\RecordProcessor\Helpers\Writers;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
 use RodrigoPedra\RecordProcessor\Exceptions\InvalidAddonException;
+
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class WriterAddon
 {
-    /** @var  array|callable */
+    /** @var array|callable */
     protected $addon;
 
     public function __construct($addon)
@@ -21,7 +22,7 @@ class WriterAddon
         $this->addon = $addon;
     }
 
-    public function handle(Writer $writer, $recordCount, Record $record = null)
+    public function handle(Writer $writer, $recordCount, ?Record $record = null)
     {
         if (is_array($this->addon)) {
             $writer->append($this->addon);

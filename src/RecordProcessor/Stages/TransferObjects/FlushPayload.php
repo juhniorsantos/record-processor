@@ -15,10 +15,10 @@ class FlushPayload
     /** @var int */
     protected $recordCount = 0;
 
-    /** @var  mixed */
+    /** @var mixed */
     protected $output = null;
 
-    /** @var  string */
+    /** @var string */
     protected $writerClassName = null;
 
     /**
@@ -85,10 +85,7 @@ class FlushPayload
         return $this->output;
     }
 
-    /**
-     * @param  mixed  $output
-     */
-    public function setOutput($output)
+    public function setOutput(mixed $output): void
     {
         $this->output = $output;
     }

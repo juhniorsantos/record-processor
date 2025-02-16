@@ -7,24 +7,21 @@ use RuntimeException;
 
 class PDOBufferedWriter extends PDOWriter
 {
-    const BUFFER_LIMIT = 100;
+    const int BUFFER_LIMIT = 100;
 
-    /** @var array */
-    protected $buffer = [];
+    protected array $buffer = [];
 
-    public function close()
+    /**
+     * @throws Exception
+     */
+    public function close(): void
     {
         $this->flush();
 
         parent::close();
     }
 
-    /**
-     * @param  mixed  $content
-     * @return void
-     * @throws Exception
-     */
-    public function append(mixed $content)
+    public function append(mixed $content): void
     {
         if (! is_array($content)) {
             throw new RuntimeException('content for PDOBufferedWriter should be an array');
@@ -33,7 +30,10 @@ class PDOBufferedWriter extends PDOWriter
         $this->pushValues($content);
     }
 
-    public function pushValues(array $values)
+    /**
+     * @throws Exception
+     */
+    public function pushValues(array $values): void
     {
         $count = array_push($this->buffer, $values);
 
@@ -42,7 +42,10 @@ class PDOBufferedWriter extends PDOWriter
         }
     }
 
-    public function flush()
+    /**
+     * @throws Exception
+     */
+    public function flush(): void
     {
         $count = count($this->buffer);
 
@@ -71,7 +74,7 @@ class PDOBufferedWriter extends PDOWriter
         }
     }
 
-    protected function prepareWriter($count)
+    protected function prepareWriter($count): false|\PDOStatement|null
     {
         if ($count !== static::BUFFER_LIMIT) {
             $this->writer = null;
@@ -80,7 +83,7 @@ class PDOBufferedWriter extends PDOWriter
         return parent::prepareWriter($count);
     }
 
-    protected function flushData()
+    protected function flushData(): array
     {
         $result = [];
 

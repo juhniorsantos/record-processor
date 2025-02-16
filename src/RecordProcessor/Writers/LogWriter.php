@@ -2,17 +2,18 @@
 
 namespace RodrigoPedra\RecordProcessor\Writers;
 
-use Psr\Log\LogLevel;
 use Illuminate\Support\Arr;
-use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
-use RodrigoPedra\RecordProcessor\Traits\NoOutput;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
+use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Traits\CountsLines;
 use RodrigoPedra\RecordProcessor\Traits\HasLogger;
 use RodrigoPedra\RecordProcessor\Traits\HasPrefix;
-use RodrigoPedra\RecordProcessor\Traits\CountsLines;
-use RodrigoPedra\RecordProcessor\Contracts\ConfigurableWriter;
-use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Traits\NoOutput;
 
 class LogWriter implements ConfigurableWriter, LoggerAwareInterface
 {
@@ -25,11 +26,10 @@ class LogWriter implements ConfigurableWriter, LoggerAwareInterface
     {
         $this->setLogger($logger);
 
-        // default values
         $this->setLevel(LogLevel::INFO);
     }
 
-    public function setLevel($level)
+    public function setLevel($level): void
     {
         if (! in_array($level, [
             LogLevel::EMERGENCY,
@@ -40,31 +40,31 @@ class LogWriter implements ConfigurableWriter, LoggerAwareInterface
             LogLevel::NOTICE,
             LogLevel::INFO,
             LogLevel::DEBUG,
-        ])) {
+        ], true)) {
             throw new InvalidArgumentException('Invalid log level. See Psr\\Log\\LogLevel class for available levels');
         }
 
         $this->level = $level;
     }
 
-    public function open()
+    public function open(): void
     {
         $this->lineCount = 0;
     }
 
-    public function close()
+    public function close(): void
     {
         //
     }
 
-    public function append(mixed $content)
+    public function append(mixed $content): void
     {
         $this->logger->log($this->level, $this->getPrefix(), Arr::wrap($content));
 
         $this->incrementLineCount();
     }
 
-    public function getConfigurableMethods()
+    public function getConfigurableMethods(): array
     {
         return [
             'setLevel',
@@ -72,7 +72,7 @@ class LogWriter implements ConfigurableWriter, LoggerAwareInterface
         ];
     }
 
-    public function createConfigurator()
+    public function createConfigurator(): Configurator
     {
         return new WriterConfigurator($this, true, true);
     }

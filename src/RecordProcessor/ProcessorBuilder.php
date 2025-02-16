@@ -2,29 +2,28 @@
 
 namespace RodrigoPedra\RecordProcessor;
 
-use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
-use RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
+use Psr\Log\LoggerInterface;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
 use RodrigoPedra\RecordProcessor\Stages\DeferredStageBuilder;
+use RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
 class ProcessorBuilder implements LoggerAwareInterface
 {
-    use BuilderConcerns\BuildsSource,
-        BuilderConcerns\BuildsReaders,
+    use BuilderConcerns\BuildsCompilers,
         BuilderConcerns\BuildsFormatter,
-        BuilderConcerns\BuildsWriters,
+        BuilderConcerns\BuildsReaders,
+        BuilderConcerns\BuildsSource,
         BuilderConcerns\BuildsStages,
-        BuilderConcerns\BuildsCompilers;
+        BuilderConcerns\BuildsWriters;
 
-    /** @var  LoggerInterface */
-    protected $logger;
+    protected ?LoggerInterface $logger = null;
 
     /** @var ProcessorStage[] */
-    protected $stages = [];
+    protected array $stages = [];
 
-    public function build()
+    public function build(): Processor
     {
         $source = $this->makeSource();
 
@@ -42,21 +41,23 @@ class ProcessorBuilder implements LoggerAwareInterface
         return $converter;
     }
 
-    public function addStage(ProcessorStage $stage)
+    public function addStage(ProcessorStage $stage): static
     {
         $this->stages[] = $stage;
 
         return $this;
     }
 
-    public function setLogger(LoggerInterface $logger = null): void
+    public function setLogger(?LoggerInterface $logger = null): void
     {
-        if (is_null($logger)) return;
+        if (is_null($logger)) {
+            return;
+        }
 
         $this->logger = $logger;
     }
 
-    protected function getLogger()
+    protected function getLogger(): LoggerInterface
     {
         if (is_null($this->logger)) {
             throw new InvalidArgumentException('Missing Logger instance. Use setLogger(...) to provide an instance');

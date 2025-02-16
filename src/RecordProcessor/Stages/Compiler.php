@@ -2,21 +2,21 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
 use RodrigoPedra\RecordProcessor\Contracts\Record;
+use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
+use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 use RodrigoPedra\RecordProcessor\Traits\CountsRecords;
 use RodrigoPedra\RecordProcessor\Traits\Writers\HasHeader;
-use RodrigoPedra\RecordProcessor\Contracts\RecordFormatter;
 use RodrigoPedra\RecordProcessor\Traits\Writers\HasTrailler;
 use RodrigoPedra\RecordProcessor\Traits\Writers\WritesHeader;
 use RodrigoPedra\RecordProcessor\Traits\Writers\WritesTrailler;
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageHandler;
-use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
 
-class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
+class Compiler implements ProcessorStageFlusher, ProcessorStageHandler
 {
-    use CountsRecords, HasHeader, WritesHeader, HasTrailler, WritesTrailler;
+    use CountsRecords, HasHeader, HasTrailler, WritesHeader, WritesTrailler;
 
     protected Writer $writer;
 
@@ -30,10 +30,6 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         $this->recordFormatter = $recordFormatter;
     }
 
-    /**
-     * @param  Record  $record
-     * @return  Record|null
-     */
     public function handle(Record $record): ?Record
     {
         $this->open($record);
@@ -68,7 +64,7 @@ class Compiler implements ProcessorStageHandler, ProcessorStageFlusher
         return $payload;
     }
 
-    protected function open(Record $record = null): void
+    protected function open(?Record $record = null): void
     {
         if ($this->isOpen) {
             return;

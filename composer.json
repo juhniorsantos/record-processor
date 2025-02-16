@@ -14,6 +14,7 @@
   ],
   "require": {
     "php": ">=8.3",
+    "ext-pdo": "*",
     "ext-fileinfo": "*",
     "psr/log": "^3.0",
     "illuminate/support": "^10.0|^11.0",
@@ -23,9 +24,13 @@
     "league/pipeline": "^1.1"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "symfony/var-dumper": "^3.3|~4.0|~4.1|~4.2|~4.3|~5.0",
     "symfony/console": "^3.3|~4.0|~4.1|~4.2|~4.3|~5.0",
-    "symfony/process": "^3.3|~4.0|~4.1|~4.2|~4.3|~5.0"
+    "symfony/process": "^3.3|~4.0|~4.1|~4.2|~4.3|~5.0",
+    "pestphp/pest": "^1.23",
+    "phpstan/phpstan": "^2.1",
+    "laravel/pint": "^1.20"
   },
   "autoload": {
     "files": [
@@ -34,6 +39,11 @@
     "psr-4": {
       "RodrigoPedra\\RecordProcessor\\": "src/RecordProcessor/",
       "RodrigoPedra\\RecordProcessor\\Examples\\": "examples/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
     }
   }
 }

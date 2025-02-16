@@ -6,14 +6,9 @@ use Psr\Log\LoggerInterface;
 
 trait HasLogger
 {
-    /** @var  LoggerInterface */
-    protected $logger;
+    protected LoggerInterface $logger;
 
-    /**
-     * @param  LoggerInterface  $logger
-     * @return void
-     */
-    public function setLogger(LoggerInterface $logger = null)
+    public function setLogger(?LoggerInterface $logger = null): void
     {
         $this->logger = $logger;
     }

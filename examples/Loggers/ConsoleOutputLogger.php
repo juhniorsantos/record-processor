@@ -60,7 +60,7 @@ class ConsoleOutputLogger implements LoggerInterface
         $this->output->writeln(strtoupper($level));
 
         if (count($context)) {
-            $this->output->writeln($message . ': ' . var_export($context, true));
+            $this->output->writeln($message.': '.var_export($context, true));
         } else {
             $this->output->writeln($message);
         }

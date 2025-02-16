@@ -5,9 +5,9 @@ namespace RodrigoPedra\RecordProcessor\Readers;
 use League\Csv\Exception;
 use League\Csv\InvalidArgument;
 use League\Csv\Reader as RawCsvReader;
-use RodrigoPedra\RecordProcessor\Traits\CsvControls;
-use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
+use RodrigoPedra\RecordProcessor\Traits\CsvControls;
 
 class CSVFileReader extends FileReader implements ConfigurableReader
 {
@@ -53,9 +53,6 @@ class CSVFileReader extends FileReader implements ConfigurableReader
         $this->setInnerIterator($csvReader->getRecords());
     }
 
-    /**
-     * @return array
-     */
     public function getConfigurableMethods(): array
     {
         return [
@@ -66,9 +63,6 @@ class CSVFileReader extends FileReader implements ConfigurableReader
         ];
     }
 
-    /**
-     * @return Configurator
-     */
     public function createConfigurator(): Configurator
     {
         return new Configurator($this);

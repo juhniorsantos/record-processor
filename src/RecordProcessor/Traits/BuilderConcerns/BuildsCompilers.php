@@ -2,14 +2,14 @@
 
 namespace RodrigoPedra\RecordProcessor\Traits\BuilderConcerns;
 
-use RodrigoPedra\RecordProcessor\Stages\Compiler;
 use RodrigoPedra\RecordProcessor\Contracts\Writer;
-use RodrigoPedra\RecordProcessor\Stages\DeferredStageBuilder;
 use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterConfigurator;
+use RodrigoPedra\RecordProcessor\Stages\Compiler;
+use RodrigoPedra\RecordProcessor\Stages\DeferredStageBuilder;
 
 trait BuildsCompilers
 {
-    protected function addCompiler(Writer $writer, WriterConfigurator $writerConfigurator = null)
+    protected function addCompiler(Writer $writer, ?WriterConfigurator $writerConfigurator = null): static
     {
         $compilerBuilder = function () use ($writer, $writerConfigurator) {
             if (is_null($writerConfigurator)) {

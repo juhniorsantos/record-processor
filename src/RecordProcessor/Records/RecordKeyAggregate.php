@@ -8,11 +8,9 @@ use RodrigoPedra\RecordProcessor\Contracts\RecordAggregate;
 
 class RecordKeyAggregate implements RecordAggregate
 {
-    /** @var Record */
-    protected $master;
+    protected Record $master;
 
-    /** @var Record[] */
-    protected $records = [];
+    protected array $records = [];
 
     public function __construct(Record $record)
     {
@@ -21,32 +19,32 @@ class RecordKeyAggregate implements RecordAggregate
         $this->pushRecord($record);
     }
 
-    public function get(string $field, ?string $default = null)
+    public function get($key, $default = null): mixed
     {
-        return $this->master->get($field, $default);
+        return $this->master->get($key, $default);
     }
 
-    public function set(string $field, ?string $value)
+    public function set($key, ?string $value): void
     {
-        $this->master->set($field, $value);
+        $this->master->set($key, $value);
     }
 
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->master->getKey();
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->master->valid()
             && count($this->records) > 0;
     }
 
-    public function pushRecord(Record $record)
+    public function pushRecord(Record $record): bool
     {
         if ($record->getKey() === $this->getKey()) {
             if ($record->valid()) {
-                array_push($this->records, $record);
+                $this->records[] = $record;
             }
 
             return true;
@@ -55,12 +53,12 @@ class RecordKeyAggregate implements RecordAggregate
         return false;
     }
 
-    public function getRecords()
+    public function getRecords(): array
     {
         return $this->records;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'master' => $this->master->toArray(),

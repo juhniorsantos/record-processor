@@ -2,36 +2,33 @@
 
 namespace RodrigoPedra\RecordProcessor\Stages;
 
+use Illuminate\Support\Str;
+use League\Csv\Exception;
+use League\Csv\Reader as RawCSVReader;
+use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
+use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
+use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
+use RodrigoPedra\RecordProcessor\Writers\CSVFileWriter;
+use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
+use RuntimeException;
 use SplFileInfo;
 use SplFileObject;
-use RuntimeException;
-use League\Csv\Reader as RawCSVReader;
-use RodrigoPedra\RecordProcessor\Helpers\FileInfo;
-use RodrigoPedra\RecordProcessor\Writers\CSVFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\JSONFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\TextFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\ExcelFileWriter;
-use RodrigoPedra\RecordProcessor\Writers\HTMLTableWriter;
-use RodrigoPedra\RecordProcessor\Contracts\ProcessorStageFlusher;
-use RodrigoPedra\RecordProcessor\Stages\TransferObjects\FlushPayload;
+
 use function RodrigoPedra\RecordProcessor\value_or_null;
 
 class DownloadFileOutput implements ProcessorStageFlusher
 {
-    const DELETE_FILE_AFTER_DOWNLOAD = true;
-    const KEEP_AFTER_DOWNLOAD = false;
+    public const bool DELETE_FILE_AFTER_DOWNLOAD = true;
 
-    /** @var SplFileObject */
-    protected $inputFile;
+    public const bool KEEP_AFTER_DOWNLOAD = false;
 
-    /** @var FileInfo */
-    protected $inputFileInfo;
+    protected ?SplFileObject $inputFile;
 
-    /** @var FileInfo */
-    protected $outputFileInfo;
+    protected FileInfo $inputFileInfo;
 
-    /** @var bool */
-    protected $deleteAfterDownload;
+    protected mixed $outputFileInfo;
+
+    protected bool $deleteAfterDownload;
 
     public function __construct($outputFileName = '', $deleteFileAfterDownload = false)
     {
@@ -39,21 +36,26 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $this->deleteAfterDownload = $deleteFileAfterDownload === true;
     }
 
-    public function flush(FlushPayload $payload)
+    /**
+     * @throws Exception
+     */
+    public function flush(FlushPayload $payload): mixed
     {
         $this->inputFile = $this->getInputFile($payload);
         $this->inputFileInfo = $this->inputFile->getFileInfo(FileInfo::class);
 
         $this->buildOutputFileInfo($payload->getWriterClassName());
 
-        $output = $this->downloadFile();
+        $this->downloadFile();
 
-        $payload->setOutput($output);
+        return $this->outputFileInfo;
 
-        return $payload;
+        //        $payload->setOutput($output);
+
+        //        return $payload;
     }
 
-    protected function getInputFile(FlushPayload $payload)
+    protected function getInputFile(FlushPayload $payload): SplFileObject
     {
         $inputFile = $payload->getOutput();
 
@@ -64,7 +66,10 @@ class DownloadFileOutput implements ProcessorStageFlusher
         return $inputFile;
     }
 
-    protected function downloadFile()
+    /**
+     * @throws Exception
+     */
+    protected function downloadFile(): void
     {
         if ($this->inputFileInfo->isCSV()) {
             $this->outputFileWithLeagueCSV($this->inputFile);
@@ -77,31 +82,33 @@ class DownloadFileOutput implements ProcessorStageFlusher
 
         $this->unlinkInputFile();
 
-        die;
+        exit;
     }
 
-    protected function sendHeaders()
+    protected function sendHeaders(): void
     {
         $mimeType = $this->inputFileInfo->isTempFile()
             ? $this->outputFileInfo->guessMimeType()
             : $this->inputFileInfo->guessMimeType();
 
-        header('Content-Type: ' . $mimeType . '; charset=utf-8');
+        header('Content-Type: '.$mimeType.'; charset=utf-8');
         header('Content-Transfer-Encoding: binary');
         header('Content-Description: File Transfer');
 
         $filename = rawurlencode($this->outputFileInfo->getBasename());
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
     }
 
-    protected function outputFileWithLeagueCSV(SplFileObject $file)
+    /**
+     * @throws Exception
+     */
+    protected function outputFileWithLeagueCSV(SplFileObject $file): void
     {
-        // League\CSV handles CSV BOM properly
         $reader = RawCSVReader::createFromFileObject($file);
-        $reader->output($this->outputFileInfo->getBasename());
+        $reader->download($this->outputFileInfo->getBasename());
     }
 
-    protected function buildOutputFileInfo($writerClassName)
+    protected function buildOutputFileInfo($writerClassName): void
     {
         if (is_string($this->outputFileInfo)) {
             $this->outputFileInfo = new FileInfo($this->outputFileInfo);
@@ -126,7 +133,7 @@ class DownloadFileOutput implements ProcessorStageFlusher
         $this->outputFileInfo = $this->inputFileInfo;
     }
 
-    protected function unlinkInputFile()
+    protected function unlinkInputFile(): void
     {
         if (! $this->deleteAfterDownload) {
             return;
@@ -144,24 +151,15 @@ class DownloadFileOutput implements ProcessorStageFlusher
         unlink($realPath);
     }
 
-    protected function buildTempOutputFileInfo($writerClassName)
+    protected function buildTempOutputFileInfo($writerClassName): FileInfo
     {
-        $fileName = implode('_', ['temp', date('YmdHis'), str_random(8)]);
+        $fileName = implode('_', ['temp', date('YmdHis'), Str::random(8)]);
 
         $extension = null;
 
         switch ($writerClassName) {
             case CSVFileWriter::class:
                 $extension = 'csv';
-                break;
-            case ExcelFileWriter::class:
-                // Cannot write excel to temporary file
-                break;
-            case HTMLTableWriter::class:
-                $extension = 'html';
-                break;
-            case JSONFileWriter::class:
-                $extension = 'json';
                 break;
             case TextFileWriter::class:
                 $extension = 'txt';
