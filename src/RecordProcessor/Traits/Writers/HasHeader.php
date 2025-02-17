@@ -8,9 +8,9 @@ use RodrigoPedra\RecordProcessor\Helpers\Writers\WriterAddon;
 
 trait HasHeader
 {
-    protected ?WriterAddon $header = null;
+    protected mixed $header = null;
 
-    public function getHeader(): ?WriterAddon
+    public function getHeader(): mixed
     {
         return $this->header;
     }

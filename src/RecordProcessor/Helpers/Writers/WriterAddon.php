@@ -22,7 +22,7 @@ class WriterAddon
         $this->addon = $addon;
     }
 
-    public function handle(Writer $writer, $recordCount, ?Record $record = null)
+    public function handle(Writer $writer, $recordCount, ?Record $record = null): void
     {
         if (is_array($this->addon)) {
             $writer->append($this->addon);

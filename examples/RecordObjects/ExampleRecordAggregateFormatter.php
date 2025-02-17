@@ -11,40 +11,35 @@ use RuntimeException;
 
 class ExampleRecordAggregateFormatter implements RecordFormatter
 {
-    /** @var ExampleRecordFormatter */
-    protected $recordFormatter;
+    protected ExampleRecordFormatter $recordFormatter;
 
     public function __construct()
     {
         $this->recordFormatter = new ExampleRecordFormatter;
     }
 
-    /**
-     * @param  RecordAggregate|Record  $master
-     * @return bool
-     */
-    public function formatRecord(Writer $writer, Record $master)
+    public function formatRecord(Writer $writer, Record $record): bool
     {
-        if (! $master instanceof RecordAggregate) {
+        if (! $record instanceof RecordAggregate) {
             throw new RuntimeException('Record for ExampleRecordAggregateFormatter should implement RecordAggregate interface');
         }
 
-        if (! $master->valid()) {
+        if (! $record->valid()) {
             return false;
         }
 
-        $children = $this->formatChildren($master->getRecords());
+        $children = $this->formatChildren($record->getRecords());
         $content = [
-            'name' => $master->getKey(),
+            'name' => $record->getKey(),
             'email' => $children,
         ];
 
         return $this->recordFormatter->formatRecord($writer, new SimpleRecord($content));
     }
 
-    public function formatChildren(array $children)
+    public function formatChildren(array $children): string
     {
-        return implode(', ', array_map(function (Record $record) {
+        return implode(', ', array_map(static function (Record $record) {
             return $record->get('email');
         }, $children));
     }

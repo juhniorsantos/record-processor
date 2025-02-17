@@ -40,12 +40,12 @@ class ExamplesCommand extends Command
 
     protected function getAvailableReaders(): string
     {
-        return 'array|collection|csv|excel|iterator|pdo|text';
+        return 'array|collection|csv|iterator|pdo|text';
     }
 
     protected function getAvailableWriters(): string
     {
-        return 'array|collection|csv|echo|excel|html|json|log|pdo|pdo-buffered|text';
+        return 'csv|echo|log|pdo|pdo-buffered|text';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -112,17 +112,12 @@ class ExamplesCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function makeBuilder()
+    protected function makeBuilder(): ProcessorBuilder
     {
         return new ProcessorBuilder;
     }
 
-    /**
-     * @param  ProcessorBuilder  $builder
-     * @param  string  $reader
-     * @return mixed
-     */
-    protected function readFrom($builder, $reader)
+    protected function readFrom(ProcessorBuilder $builder, string $reader): mixed
     {
         $inputPath = $this->storagePath('input');
 
@@ -133,8 +128,6 @@ class ExamplesCommand extends Command
                 return $builder->readFromCollection(new Collection($this->sampleData()));
             case 'csv':
                 return $builder->readFromCSVFile($inputPath.'.csv');
-            case 'excel':
-                return $builder->readFromExcelFile($inputPath.'.xlsx');
             case 'iterator':
                 return $builder->readFromIterator(new ArrayIterator($this->sampleData()));
             case 'pdo':
@@ -149,20 +142,11 @@ class ExamplesCommand extends Command
         }
     }
 
-    /**
-     * @param  ProcessorBuilder  $builder
-     * @param  string  $writer
-     * @return mixed
-     */
-    protected function writeTo($builder, $writer)
+    protected function writeTo(ProcessorBuilder $builder, string $writer): mixed
     {
         $outputPath = $this->storagePath('output');
 
         switch ($writer) {
-            case 'array':
-                return $builder->writeToArray();
-            case 'collection':
-                return $builder->writeToCollection();
             case 'csv':
                 return $builder->writeToCSVFile($outputPath.'.csv', function (WriterConfigurator $configurator) {
                     $configurator->setHeader(['name', 'email']);
@@ -171,47 +155,6 @@ class ExamplesCommand extends Command
                 return $builder->writeToEcho(function (WriterConfigurator $configurator) {
                     $configurator->setPrefix('PERSIST');
                 });
-            case 'excel':
-                return $builder->writeToExcelFile($outputPath.'.xlsx',
-                    function (WriterConfigurator $configurator) {
-                        $configurator->setHeader(['name', 'email']);
-
-                        $configurator->setTrailler(function (WriterCallbackProxy $proxy) {
-                            $proxy->append([$proxy->getRecordCount().' records']);
-                            $proxy->append([($proxy->getLineCount() + 1).' lines']);
-                        });
-
-                        $configurator->setWorkbookConfigurator(function ($workbook) {
-                            $workbook->setTitle('Workbook title');
-                            $workbook->setCreator('Creator');
-                            $workbook->setCompany('Company');
-                        });
-
-                        $configurator->setWorksheetConfigurator(function ($worksheet) {
-                            $worksheet->setTitle('results', false);
-
-                            $worksheet->setColumnFormat([
-                                'A' => Formats::text(),
-                                'B' => Formats::general(),
-                            ]);
-
-                            // header
-                            $worksheet->freezeFirstRow();
-                            $worksheet->cells('A1:B1', function ($cells) {
-                                $cells->setFontWeight('bold');
-                                $cells->setBorder('node', 'none', 'solid', 'none');
-                            });
-                            $worksheet->getStyle('A1:B1')->getNumberFormat()->setFormatCode(Formats::text());
-                        });
-                    });
-            case 'html':
-                return $builder->writeToHTMLTable(function (WriterConfigurator $configurator) {
-                    $configurator->setHeader(['name', 'email']);
-                    $configurator->setTableClassAttribute('table table-condensed');
-                    $configurator->setTableIdAttribute('my-table');
-                });
-            case 'json':
-                return $builder->writeToJSONFile($outputPath.'.json');
             case 'log':
                 return $builder->writeToLog(function (WriterConfigurator $configurator) {
                     $configurator->setPrefix('PERSIST');
@@ -228,12 +171,12 @@ class ExamplesCommand extends Command
         }
     }
 
-    protected function storagePath($file)
+    protected function storagePath($file): string
     {
         return __DIR__.'/../storage/'.$file;
     }
 
-    protected function makeConnection()
+    protected function makeConnection(): PDO
     {
         $filePath = $this->storagePath('database.sqlite');
 
@@ -258,7 +201,7 @@ class ExamplesCommand extends Command
         return $connection;
     }
 
-    protected function populateTable(PDO $connection, $seed)
+    protected function populateTable(PDO $connection, $seed): void
     {
         $connection->exec('CREATE TABLE IF NOT EXISTS users (name TEXT, email TEXT)');
 
@@ -280,7 +223,7 @@ class ExamplesCommand extends Command
         $writer->close();
     }
 
-    protected function sampleData()
+    protected function sampleData(): array
     {
         return [
             ['Rodrigo', 'rodrigo@example.com'],

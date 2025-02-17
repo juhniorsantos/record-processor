@@ -18,14 +18,9 @@ class WriterConfigurator extends Configurator
 {
     use HasHeader, HasTrailler;
 
-    /** @var bool */
-    protected $hasHeader;
-
-    /** @var bool */
-    protected $hasTrailler;
-
-    /** @var RecordFormatter|null */
-    protected $recordFormatter = null;
+    protected bool $hasHeader = false;
+    protected bool $hasTrailler = false;
+    protected ?RecordFormatter $recordFormatter = null;
 
     public function __construct(ConfigurableWriter $writer, $hasHeader = false, $hasTrailler = false)
     {
@@ -35,7 +30,7 @@ class WriterConfigurator extends Configurator
         $this->hasTrailler = $hasTrailler;
     }
 
-    public function getRecordFormatter(?RecordFormatter $defaultRecordFormatter = null)
+    public function getRecordFormatter(?RecordFormatter $defaultRecordFormatter = null): RecordFormatter|ArrayRecordFormatter|null
     {
         if (is_null($this->recordFormatter)) {
             return $defaultRecordFormatter ?: new ArrayRecordFormatter;
@@ -44,10 +39,7 @@ class WriterConfigurator extends Configurator
         return $this->recordFormatter;
     }
 
-    /**
-     * @param  RecordFormatter|callable  $recordFormatter
-     */
-    public function setRecordFormatter($recordFormatter)
+    public function setRecordFormatter($recordFormatter): void
     {
         if (is_callable($recordFormatter)) {
             $this->recordFormatter = new CallbackRecordFormatter($recordFormatter);
@@ -62,7 +54,7 @@ class WriterConfigurator extends Configurator
         $this->recordFormatter = $recordFormatter;
     }
 
-    public function setHeader($header)
+    public function setHeader($header): void
     {
         if (! $this->hasHeader) {
             $className = get_class($this->configurable);
@@ -73,7 +65,7 @@ class WriterConfigurator extends Configurator
         $this->header = $header;
     }
 
-    public function setTrailler($trailler)
+    public function setTrailler($trailler): void
     {
         if (! $this->hasTrailler) {
             $className = get_class($this->configurable);

@@ -6,7 +6,7 @@ use function RodrigoPedra\RecordProcessor\value_or_null;
 
 trait HasPrefix
 {
-    protected ?string $prefix;
+    protected ?string $prefix = null;
 
     public function getPrefix(): string
     {
