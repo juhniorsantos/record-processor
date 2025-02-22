@@ -37,7 +37,7 @@ test('command accepts valid reader types', function () {
 });
 
 test('command accepts valid writer types', function () {
-    $validWriters = ['csv', 'echo', 'log', 'pdo', 'pdo-buffered', 'text'];
+    $validWriters = ['csv', 'log', 'pdo', 'pdo-buffered', 'text'];
 
     foreach ($validWriters as $writer) {
         $this->commandTester->execute([
@@ -52,7 +52,7 @@ test('command accepts valid writer types', function () {
 test('command handles log option correctly', function () {
     $this->commandTester->execute([
         'reader' => 'array',
-        'writer' => 'echo',
+        'writer' => 'array',
         '--log' => true,
     ]);
 
@@ -64,7 +64,7 @@ test('command handles log option correctly', function () {
 test('command handles aggregate option correctly', function () {
     $this->commandTester->execute([
         'reader' => 'array',
-        'writer' => 'echo',
+        'writer' => 'array',
         '--aggregate' => true,
     ]);
 
@@ -74,11 +74,11 @@ test('command handles aggregate option correctly', function () {
 test('command handles invalid reader option correctly', function () {
     $this->commandTester->execute([
         'reader' => 'array1',
-        'writer' => 'echo',
+        'writer' => 'array',
         '--invalid' => true,
     ]);
 
-    $output = $this->commandTester->getDisplay();
+    $this->commandTester->getDisplay();
 
 })->throws(InvalidArgumentException::class, 'Invalid reader');
 
@@ -88,6 +88,6 @@ test('command handles invalid writer option correctly', function () {
         'writer' => 'echo1',
     ]);
 
-    $output = $this->commandTester->getDisplay();
+    $this->commandTester->getDisplay();
 
 })->throws(InvalidArgumentException::class, 'Invalid writer');

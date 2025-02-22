@@ -3,11 +3,13 @@
 use RodrigoPedra\RecordProcessor\ProcessorBuilder;
 use RodrigoPedra\RecordProcessor\Processor;
 use RodrigoPedra\RecordProcessor\Contracts\ProcessorStage;
-use RodrigoPedra\RecordProcessor\Records\Parser\ArrayRecordParser;
+
+beforeEach(function () {
+    $this->builder = new ProcessorBuilder();
+});
 
 test('processor builder can be instantiated', function () {
-    $builder = new ProcessorBuilder();
-    expect($builder)->toBeInstanceOf(ProcessorBuilder::class);
+    expect($this->builder)->toBeInstanceOf(ProcessorBuilder::class);
 });
 
 test('processor builder can build a processor', function () {

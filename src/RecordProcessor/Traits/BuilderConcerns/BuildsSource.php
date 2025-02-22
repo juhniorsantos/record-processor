@@ -10,7 +10,7 @@ use RodrigoPedra\RecordProcessor\Source;
 
 trait BuildsSource
 {
-    protected RecordParser $recordParser;
+    protected ?RecordParser $recordParser = null;
 
     public function usingParser(callable|RecordParser $recordParser): static
     {

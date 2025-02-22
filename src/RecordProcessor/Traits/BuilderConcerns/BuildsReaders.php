@@ -7,6 +7,7 @@ use Iterator;
 use PDO;
 use RodrigoPedra\RecordProcessor\Contracts\ConfigurableReader;
 use RodrigoPedra\RecordProcessor\Contracts\Reader;
+use RodrigoPedra\RecordProcessor\Exceptions\ReaderNotFoundException;
 use RodrigoPedra\RecordProcessor\Readers\ArrayReader;
 use RodrigoPedra\RecordProcessor\Readers\CollectionReader;
 use RodrigoPedra\RecordProcessor\Readers\CSVFileReader;
@@ -14,10 +15,10 @@ use RodrigoPedra\RecordProcessor\Readers\IteratorReader;
 use RodrigoPedra\RecordProcessor\Readers\PDOReader;
 use RodrigoPedra\RecordProcessor\Readers\TextFileReader;
 use RodrigoPedra\RecordProcessor\Records\Parsers\ArrayRecordParser;
-
+use RodrigoPedra\RecordProcessor\Helpers\Configurator;
 trait BuildsReaders
 {
-    protected Reader $reader;
+    protected ?Reader $reader = null;
 
     public function readFromArray(array $items): static
     {
@@ -80,10 +81,17 @@ trait BuildsReaders
         return $this;
     }
 
-    protected function configureReader(ConfigurableReader $reader, ?callable $configurator = null): ?\RodrigoPedra\RecordProcessor\Helpers\Configurator
+    /**
+     * @throws ReaderNotFoundException
+     */
+    protected function configureReader(ConfigurableReader $reader, ?callable $configurator = null): ?Configurator
     {
         if (is_null($configurator)) {
             return null;
+        }
+
+        if (!$reader) {
+            throw new ReaderNotFoundException();
         }
 
         $readerConfigurator = $reader->createConfigurator();
